@@ -1,13 +1,16 @@
 package com.thyme.smalam119.routeplannerapplication.Map.ResultMap;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.thyme.smalam119.routeplannerapplication.LocationList.OptimizationType;
+import com.thyme.smalam119.routeplannerapplication.Map.InputMap.MainActivity;
 import com.thyme.smalam119.routeplannerapplication.R;
 
 public class ResultMapActivity extends AppCompatActivity {
@@ -18,7 +21,6 @@ public class ResultMapActivity extends AppCompatActivity {
     private RadioGroup mRadioGroup;
     private RadioButton mByDistanceRadioButton;
     private RadioButton mByDurationRadioButton;
-    private boolean isTracking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class ResultMapActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map_result);
         mMapFragment.getMapAsync(mRpaOnResultMapReadyCallBack);
 
-        mOptimizeButton = (Button) findViewById(R.id.opt_button);
+        mOptimizeButton = findViewById(R.id.opt_button);
         mOptimizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,6 +49,7 @@ public class ResultMapActivity extends AppCompatActivity {
                 } else if(selectedId == mByDurationRadioButton.getId()) {
                     mRpaOnResultMapReadyCallBack.drawRoute(OptimizationType.BY_DURATION);
                 }
+                Log.d("resultMapActivity", "optimize button");
             }
         });
 
@@ -54,22 +57,14 @@ public class ResultMapActivity extends AppCompatActivity {
         mByDistanceRadioButton = (RadioButton) findViewById(R.id.by_distance);
         mByDistanceRadioButton.setChecked(true);
         mByDurationRadioButton = (RadioButton) findViewById(R.id.by_duration);
-        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton = (Button) findViewById(R.id.go_main_button);
         mNextButton.setVisibility(View.GONE);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isTracking) {
-                    mRpaOnResultMapReadyCallBack.rpaLocationListener.stopTracking();
-                    mNextButton.setText("Start Tracking");
-                    mNextButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    isTracking = false;
-                } else {
-                    mRpaOnResultMapReadyCallBack.rpaLocationListener.startTracking();
-                    mNextButton.setText("Tracking......");
-                    mNextButton.setBackgroundColor(getResources().getColor(R.color.green));
-                    isTracking = true;
-                }
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

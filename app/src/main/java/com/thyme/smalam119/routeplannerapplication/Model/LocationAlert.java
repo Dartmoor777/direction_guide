@@ -1,12 +1,10 @@
 package com.thyme.smalam119.routeplannerapplication.Model;
 
-import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
  * Created by smalam119 on 12/20/17.
  */
 
-@IgnoreExtraProperties
 public class LocationAlert {
     private double mLat, mLng;
     private String title, message;

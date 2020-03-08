@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.Image;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +17,7 @@ import com.thyme.smalam119.routeplannerapplication.R;
 public class LocationNotificationLabel extends RelativeLayout {
     private View mRootView;
     private TextView mNotificationCountTV;
-    private ImageView mMarkerIV;
+    private ImageButton mMarkerIV;
 
     private String mNotificationCount;
     private Image mImage;
@@ -57,7 +58,7 @@ public class LocationNotificationLabel extends RelativeLayout {
 
     private void prepareView(Context context) {
         mRootView = inflate(context, R.layout.location_notification_label, this);
-        mNotificationCountTV = (TextView) mRootView.findViewById(R.id.notification_count);
-        mMarkerIV = (ImageView) mRootView.findViewById(R.id.marker_image);
+        mNotificationCountTV = mRootView.findViewById(R.id.notification_count);
+        mMarkerIV = mRootView.findViewById(R.id.marker_image);
     }
 }

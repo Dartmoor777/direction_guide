@@ -51,10 +51,10 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/next_button"
+        android:id="@+id/go_main_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Tracking"
+        android:text="Go to the main window"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"

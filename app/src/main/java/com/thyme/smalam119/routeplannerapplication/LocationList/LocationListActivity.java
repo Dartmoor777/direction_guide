@@ -9,8 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.model.LatLng;
-import com.thyme.smalam119.routeplannerapplication.Login.LoginActivity;
 import com.thyme.smalam119.routeplannerapplication.Model.Direction.Example;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationDetail;
 import com.thyme.smalam119.routeplannerapplication.NetworkCalls.ApiInterface;
@@ -19,6 +20,7 @@ import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.ResultLocationList.ResultLocationListActivity;
 import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.smalam119.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
+import com.thyme.smalam119.routeplannerapplication.Utils.Permission.RuntimePermissionsActivity;
 import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.TSPEngine;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -86,6 +88,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     private void prepareLists() {
         mLocationDetails = mLocationDetailSharedPrefUtils.getLocationDataFromSharedPref();
         numberOfLocations = mLocationDetails.size();
+        Log.d("LocationListActivity", String.format("location size=%d", numberOfLocations));
         mDistanceList = new ArrayList<>();
         mDurationList = new ArrayList<>();
         optimizedLocationListDistance = new ArrayList<>();
@@ -101,6 +104,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         mOptimizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("LocationListActivity", "optimize onClick");
                 getOptimizeRoute();
             }
         });
@@ -113,31 +117,38 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         mLocationRecyclerView.setAdapter(locationListAdapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, LoginActivity.class));
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        startActivity(new Intent(this, LoginActivity.class));
+//    }
 
     private void prepareDistanceDurationList() {
         for (int i = 0; i < numberOfLocations; i++) {
             LatLng origin = mLocationDetails.get(i).getLatLng();
+            assert origin != null;
+            Log.d("prepareDistanceDurationList", String.format("origin=%s", origin.toString()));
+
             for (int j = 0; j < numberOfLocations; j++) {
                 LatLng dest = mLocationDetails.get(j).getLatLng();
-                getDistanceAndDuration(origin,dest);
+                assert dest != null;
+                Log.d("prepareDistanceDurationList", String.format("dest=%s", dest.toString()));
+                getDistanceAndDuration(origin, dest);
             }
         }
     }
 
     private void getDistanceAndDuration(LatLng origin, LatLng dest) {
-        final ProgressDialog mProgressDialog = ProgressDialog.show(this,"Please Wait",
-                "collecting data...");
-        Call<Example> call = apiService.getDistanceDuration("metric", origin.latitude + "," + origin.longitude,dest.latitude + "," + dest.longitude, "driving");
+        // TODO doesn't work
+//        final ProgressDialog mProgressDialog = ProgressDialog.show(this,"Please Wait",
+//                "collecting data...");
+        Call<Example> call = apiService.getDistanceDuration("metric", origin.latitude + "," + origin.longitude,dest.latitude + "," + dest.longitude, "driving", getResources().getString(R.string.google_maps_key));
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 try {
-                    mProgressDialog.hide();
+//                    mProgressDialog.hide();
+                    assert response.body() != null;
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String distance = response.body().getRoutes().get(i).getLegs().get(i).getDistance().getText();
                         String time = response.body().getRoutes().get(i).getLegs().get(i).getDuration().getText();
@@ -145,21 +156,23 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
                         mDurationList.add(time);
                     }
                 } catch (Exception e) {
-                    mProgressDialog.hide();
+//                    mProgressDialog.hide();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                mProgressDialog.hide();
+//                mProgressDialog.hide();
             }
         });
     }
 
     public void getOptimizeRoute() {
+        // TODO: fix this
         int row = -1;
 
+        Log.d("getOptimizeRoute", String.format("distance list size=%d", mDistanceList.size()));
         for (int i = 0; i < mDistanceList.size(); i++) {
             int column = i % numberOfLocations;
             if (column == 0)
@@ -177,6 +190,8 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         for(int i = 0; i < pointOrderByDistance.size() - 1; i++){
             optimizedLocationListDistance.add(mLocationDetails.get(pointOrderByDistance.get(i)));
         }
+
+
 
 
 //        for (int i = 0; i < mDurationList.size(); i++) {
@@ -204,9 +219,12 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     }
 
     private void gotoResultLists() {
+        Log.d("LocationListActivity", "gotoResultsActivity");
         Intent intent = new Intent(this, ResultLocationListActivity.class);
         intent.putExtra("optimizedLocationListDistance", optimizedLocationListDistance);
         intent.putExtra("optimizedLocationListDuration", optimizedLocationListDuration);
+        Log.d("gotoResultLists", String.format("totalDistance=%d", totalDistance));
+        Log.d("gotoResultLists", String.format("totalDuration=%d", totalDuration));
         intent.putExtra("totalDistance", HandyFunctions.convertMeterToKiloMeter(totalDistance));
         intent.putExtra("totalDuration", HandyFunctions.convertMinuteToHour(totalDuration));
         startActivity(intent);

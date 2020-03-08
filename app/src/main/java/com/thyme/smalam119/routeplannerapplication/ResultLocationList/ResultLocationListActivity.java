@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.thyme.smalam119.routeplannerapplication.LocationList.LocationListActivity;
 import com.thyme.smalam119.routeplannerapplication.LocationList.VerticalSpaceItemDecoration;
 import com.thyme.smalam119.routeplannerapplication.Map.InputMap.MainActivity;
@@ -19,13 +17,10 @@ import com.thyme.smalam119.routeplannerapplication.Model.User.SinglePath;
 import com.thyme.smalam119.routeplannerapplication.Model.User.SingleRoute;
 import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.Utils.Alerts;
-import com.thyme.smalam119.routeplannerapplication.Utils.Firebase.FireBaseDBUtils;
-import com.thyme.smalam119.routeplannerapplication.Utils.Firebase.OnFireBaseDBChangeListener;
-import com.thyme.smalam119.routeplannerapplication.Utils.LoginRegistrationManager.LoginManager;
 
 import java.util.ArrayList;
 
-public class ResultLocationListActivity extends AppCompatActivity implements OnFireBaseDBChangeListener {
+public class ResultLocationListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private TextView mTotalDistanceTV, mTotalDurationTV;
     private Button mSaveResultButton, mContinueButton;
@@ -34,8 +29,6 @@ public class ResultLocationListActivity extends AppCompatActivity implements OnF
     private ArrayList<LocationDetail> optimizedLocationListDuration;
     private double mTotalDistance;
     private float mTotalDuration;
-    private FireBaseDBUtils mFireBaseDBUtils;
-    private LoginManager mLoginManager;
     private ArrayList<SingleRoute> mPreviousRoutes;
     private boolean isSaved = false;
 
@@ -48,24 +41,16 @@ public class ResultLocationListActivity extends AppCompatActivity implements OnF
     }
 
     private void prepareUtils() {
-        prepareFirebase();
         prepareLists();
         mResultLocationListAdapter = new ResultLocationListAdapter(this,optimizedLocationListDistance);
     }
 
     private void prepareLists() {
-        optimizedLocationListDistance = (ArrayList<LocationDetail>)getIntent().getSerializableExtra("optimizedLocationListDistance");
-        optimizedLocationListDuration = (ArrayList<LocationDetail>)getIntent().getSerializableExtra("optimizedLocationListDuration");
+        optimizedLocationListDistance = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDistance");
+        optimizedLocationListDuration = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDuration");
         mTotalDistance = getIntent().getDoubleExtra("totalDistance",0.0);
         mTotalDuration = getIntent().getFloatExtra("totalDuration",0.0f);
         mPreviousRoutes = new ArrayList<>();
-    }
-
-    private void prepareFirebase() {
-        mLoginManager = new LoginManager(this);
-        mFireBaseDBUtils = new FireBaseDBUtils("rpa-data");
-        mFireBaseDBUtils.onFirebaseDBChangeListener = this;
-        mFireBaseDBUtils.readData("users",mLoginManager.getAuthKey(),"routeList");
     }
 
     private void prepareView() {
@@ -117,7 +102,6 @@ public class ResultLocationListActivity extends AppCompatActivity implements OnF
         for(SingleRoute previousSingleRoute: mPreviousRoutes) {
             singleRoutes.add(previousSingleRoute);
         }
-        mFireBaseDBUtils.writeData("users",mLoginManager.getAuthKey(),"routeList",singleRoutes);
         isSaved = true;
         Alerts.showSimpleWarning(ResultLocationListActivity.this,"Saved",
                 "Location Saved");
@@ -136,16 +120,4 @@ public class ResultLocationListActivity extends AppCompatActivity implements OnF
         startActivity(new Intent(this, LocationListActivity.class));
     }
 
-    @Override
-    public void onDataChanged(DataSnapshot dataSnapshot) {
-        mPreviousRoutes.clear();
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            SingleRoute singleRoute = snapshot.getValue(SingleRoute.class);
-            mPreviousRoutes.add(singleRoute);
-        }
-    }
-
-    @Override
-    public void onCancel(DatabaseError error) {
-    }
 }

@@ -12,5 +12,5 @@ import retrofit2.http.Query;
 public interface ApiInterface {
 
     @GET("api/directions/json")
-    Call<Example> getDistanceDuration(@Query("units") String units, @Query("origin") String origin, @Query("destination") String destination, @Query("mode") String mode);
+    Call<Example> getDistanceDuration(@Query("units") String units, @Query("origin") String origin, @Query("destination") String destination, @Query("mode") String mode, @Query("key") String key);
 }

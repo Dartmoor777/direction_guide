@@ -15,6 +15,7 @@ import com.thyme.smalam119.routeplannerapplication.Model.Direction.Example;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationDetail;
 import com.thyme.smalam119.routeplannerapplication.NetworkCalls.ApiInterface;
 import com.thyme.smalam119.routeplannerapplication.NetworkCalls.RetroFitClient;
+import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.Utils.Cons;
 import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.smalam119.routeplannerapplication.Utils.JsonParserForDirection;
@@ -89,10 +90,11 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
 
     }
 
-    public void drawRoute(final LocationDetail origin, final LocationDetail dest, final int locationIndex) {
+    private void drawRoute(final LocationDetail origin, final LocationDetail dest, final int locationIndex) {
         final ProgressDialog mProgressDialog = ProgressDialog.show(mActivity,"Please Wait",
                 "drawing route....");
-        Call<Example> call = apiService.getDistanceDuration("metric", origin.getLat() + "," + origin.getLng(),dest.getLat() + "," + dest.getLng(), "driving");
+
+        Call<Example> call = apiService.getDistanceDuration("metric", origin.getLat() + "," + origin.getLng(),dest.getLat() + "," + dest.getLng(), "driving", this.mActivity.getResources().getString(R.string.google_maps_key));
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {

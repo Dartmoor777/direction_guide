@@ -5,14 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
 
-    <Button
+    <ImageButton
         android:id="@+id/marker_image"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/marker_white" />
+        android:background="@drawable/marker_white"
+        android:contentDescription="Calculate location" />
 
     <TextView
         android:id="@+id/notification_count"

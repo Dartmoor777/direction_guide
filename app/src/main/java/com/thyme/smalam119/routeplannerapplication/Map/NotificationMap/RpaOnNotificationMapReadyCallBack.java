@@ -15,14 +15,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationAlert;
 import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.Utils.Cons;
-import com.thyme.smalam119.routeplannerapplication.Utils.Firebase.FireBaseAuthUtils;
-import com.thyme.smalam119.routeplannerapplication.Utils.Firebase.FireBaseDBUtils;
-import com.thyme.smalam119.routeplannerapplication.Utils.Firebase.OnFireBaseDBChangeListener;
 import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import java.util.ArrayList;
 
@@ -30,20 +25,15 @@ import java.util.ArrayList;
  * Created by smalam119 on 12/20/17.
  */
 
-public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback, OnFireBaseDBChangeListener {
+public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
     private Activity mActivity;
     private Vibrator mVibrate;
-    private FireBaseDBUtils mFireBaseDBUtils;
-    private FireBaseAuthUtils mFireBaseAuthUtils;
     private ArrayList<LocationAlert> locationAlerts;
     private GoogleMap mGoogleMap;
 
     public RpaOnNotificationMapReadyCallBack(Activity activity) {
         this.mActivity = activity;
         mVibrate = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-        mFireBaseAuthUtils = new FireBaseAuthUtils(mActivity);
-        mFireBaseDBUtils = new FireBaseDBUtils("rpa-data");
-        mFireBaseDBUtils.onFirebaseDBChangeListener = this;
         locationAlerts = new ArrayList<>();
     }
 
@@ -57,7 +47,7 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback, On
             }
         });
         prepareMap();
-        mFireBaseDBUtils.readData("rpa-alerts");
+//        mFireBaseDBUtils.readData("rpa-alerts");
     }
 
     private void showInputDialog(final LatLng latLng) {
@@ -76,7 +66,7 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback, On
                 String title = notificationTitle.getText().toString();
                 String message = notificationMessage.getText().toString();
                 LocationAlert locationAlert = new LocationAlert(latLng.latitude,latLng.longitude,title,message);
-                mFireBaseDBUtils.writeData("rpa-alerts",mFireBaseAuthUtils.getCurrentUser().getUid() + "_" + HandyFunctions.generateRandomString(),locationAlert);
+//                mFireBaseDBUtils.writeData("rpa-alerts",mFireBaseAuthUtils.getCurrentUser().getUid() + "_" + HandyFunctions.generateRandomString(),locationAlert);
                 alertDialogAndroid.dismiss();
             }
         });
@@ -91,21 +81,21 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback, On
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.DHAKA_LATLNG, 14.0f));
     }
 
-    @Override
-    public void onDataChanged(DataSnapshot dataSnapshot) {
+//    @Override
+//    public void onDataChanged(DataSnapshot dataSnapshot) {
+//
+//        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//            LocationAlert locationAlert = snapshot.getValue(LocationAlert.class);
+//            mGoogleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(locationAlert.getmLat(), locationAlert.getmLng()))
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.road_block))
+//                    .title(locationAlert.getMessage()));
+//        }
+//
+//    }
 
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            LocationAlert locationAlert = snapshot.getValue(LocationAlert.class);
-            mGoogleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(locationAlert.getmLat(), locationAlert.getmLng()))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.road_block))
-                    .title(locationAlert.getMessage()));
-        }
-
-    }
-
-    @Override
-    public void onCancel(DatabaseError error) {
-
-    }
+//    @Override
+//    public void onCancel(DatabaseError error) {
+//
+//    }
 }
