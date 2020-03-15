@@ -1,7 +1,5 @@
 package com.thyme.smalam119.routeplannerapplication.Map.ResultMap;
 
-import android.app.ProgressDialog;
-import android.util.Log;
 import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,9 +61,9 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     private void prepareMap() {
         mGoogleMap.setMinZoomPreference(13.0f);
         mGoogleMap.setMaxZoomPreference(16.0f);
-        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.DHAKA_BOUND);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.DHAKA_LATLNG));
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.DHAKA_LATLNG, 14.0f));
+//        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, 14.0f));
     }
 
     public void drawRoute(OptimizationType optimizationType) {
@@ -91,15 +89,14 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     }
 
     private void drawRoute(final LocationDetail origin, final LocationDetail dest, final int locationIndex) {
-        final ProgressDialog mProgressDialog = ProgressDialog.show(mActivity,"Please Wait",
-                "drawing route....");
+//        final ProgressDialog mProgressDialog = ProgressDialog.show(mActivity,"Please Wait", "drawing route....");
 
         Call<Example> call = apiService.getDistanceDuration("metric", origin.getLat() + "," + origin.getLng(),dest.getLat() + "," + dest.getLng(), "driving", this.mActivity.getResources().getString(R.string.google_maps_key));
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 try {
-                    mProgressDialog.hide();
+//                    mProgressDialog.hide();
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
                         List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
@@ -120,14 +117,14 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
                     }
                     mActivity.mNextButton.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
-                    mProgressDialog.hide();
+//                    mProgressDialog.hide();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                mProgressDialog.hide();
+//                mProgressDialog.hide();
             }
         });
     }

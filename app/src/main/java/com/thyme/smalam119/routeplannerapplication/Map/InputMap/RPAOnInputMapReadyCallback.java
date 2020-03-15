@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,6 +91,8 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
     private void getLocationDetail(final double latitude, final double longitude, final Context context) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
+            Log.d("getLocationDetail", String.format("get location from: latitude=%f, longitude=%f",
+                            latitude, longitude));
             List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
             if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
@@ -98,7 +101,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             }
 
         } catch(IOException e) {
-
+            Log.e("getLocationDetail", "failed to get location");
         }
     }
 
@@ -124,13 +127,14 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
     }
 
     private void initializeMap() {
+        Log.d("initializeMap", String.format("locations' size=%d", mActivity.locationDetails.size()));
         if(mActivity.locationDetails.size() == 0) {
             mGoogleMap.clear();
             mGoogleMap.setMinZoomPreference(13.0f);
             mGoogleMap.setMaxZoomPreference(16.0f);
-            mGoogleMap.setLatLngBoundsForCameraTarget(Cons.DHAKA_BOUND);
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.DHAKA_LATLNG));
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.DHAKA_LATLNG, 14.0f));
+//            mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, 14.0f));
         } else {
             for(LocationDetail locationDetail : mActivity.locationDetails) {
                 putMarker(locationDetail);
@@ -144,7 +148,8 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
 
     private void putMarker(LocationDetail locationDetail) {
         String firstCharacterOfLocationNameNew = HandyFunctions.getFirstCharacter(locationDetail.getLocationTitle());
-        LatLng latLngSel = new LatLng(Double.valueOf(locationDetail.getLat()),Double.valueOf(locationDetail.getLng()));
+        Log.d("putMarker", String.format("Make latLngSel from x1=%s, x2=%s", locationDetail.getLat(), locationDetail.getLng()));
+        LatLng latLngSel = new LatLng(Double.parseDouble(locationDetail.getLat()),Double.parseDouble(locationDetail.getLng()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLngSel)
                 .title("Marker")
                 .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,

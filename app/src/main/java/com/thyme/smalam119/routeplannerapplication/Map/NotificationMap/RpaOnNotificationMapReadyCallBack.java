@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,13 +11,11 @@ import android.widget.EditText;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationAlert;
 import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.Utils.Cons;
-import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
+
 import java.util.ArrayList;
 
 /**
@@ -76,9 +73,9 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
     private void prepareMap() {
         mGoogleMap.setMinZoomPreference(13.0f);
         mGoogleMap.setMaxZoomPreference(16.0f);
-        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.DHAKA_BOUND);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.DHAKA_LATLNG));
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.DHAKA_LATLNG, 14.0f));
+//        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, 14.0f));
     }
 
 //    @Override

@@ -10,8 +10,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 public class Cons {
 
     public static final String KEY_EXTRA_LOCATION_ARRAY_LIST = "locationArrayList";
-    public static final LatLngBounds DHAKA_BOUND = new LatLngBounds(
-            new LatLng(23.661270, 90.329547), new LatLng(23.900002, 90.509105));
-    public static final LatLng DHAKA_LATLNG = new LatLng(23.8103, 90.4125);
-    public static final LatLng BUET_LATLNG = new LatLng(23.7265631, 90.3886909);
+    public static final LatLngBounds KYIV_BOUND = new LatLngBounds(
+            new LatLng(50.4016991, 30.2525147), new LatLng(50.4500718, 30.5234528));
+    public static final LatLng KYIV_LATLNG = new LatLng(50.431782, 30.5234528);
+    // public static final LatLng BUET_LATLNG = new LatLng(23.7265631, 90.3886909);
 }

@@ -62,8 +62,7 @@ public class ResultMapActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(view.getContext(), MainActivity.class));
                 finish();
             }
         });

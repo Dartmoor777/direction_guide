@@ -12,6 +12,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 import com.thyme.smalam119.routeplannerapplication.Model.Direction.Example;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationDetail;
 import com.thyme.smalam119.routeplannerapplication.NetworkCalls.ApiInterface;
@@ -22,6 +30,8 @@ import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.smalam119.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
 import com.thyme.smalam119.routeplannerapplication.Utils.Permission.RuntimePermissionsActivity;
 import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.TSPEngine;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,7 +78,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     }
 
     private void prepareUtils() {
-        apiService = RetroFitClient.getClient().create(ApiInterface.class);
+//        apiService = RetroFitClient.getClient().create(ApiInterface.class);
         mTspEng = new TSPEngine();
         mLocationDetailSharedPrefUtils = new LocationDetailSharedPrefUtils(getApplicationContext());
     }
@@ -124,25 +134,56 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 //    }
 
     private void prepareDistanceDurationList() {
-        for (int i = 0; i < numberOfLocations; i++) {
-            LatLng origin = mLocationDetails.get(i).getLatLng();
-            assert origin != null;
-            Log.d("prepareDistanceDurationList", String.format("origin=%s", origin.toString()));
-
-            for (int j = 0; j < numberOfLocations; j++) {
-                LatLng dest = mLocationDetails.get(j).getLatLng();
-                assert dest != null;
-                Log.d("prepareDistanceDurationList", String.format("dest=%s", dest.toString()));
-                getDistanceAndDuration(origin, dest);
-            }
+        // prepare places uri for google maps request
+        StringBuilder placesBuilder = new StringBuilder("");
+        for (int i = 0; numberOfLocations > 0
+                && i < numberOfLocations-1; i++) {
+            placesBuilder.append(mLocationDetails.get(i).getLatLng().toString());
+            placesBuilder.append("|");
         }
+        placesBuilder.append(mLocationDetails.get(numberOfLocations-1).getLatLng().toString());
+
+        String places = placesBuilder.toString();
+        // should be something like that: 41.43206,-81.38992|-33.86748,151.20699|41.43896,-81.21982
+        Log.d("prepareDistanceDuratio", places);
+
+        GeoApiContext distCalcer = new GeoApiContext.Builder()
+                .apiKey(getResources().getString(R.string.google_maps_key))
+                .build();
+
+        DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer);
+        DistanceMatrix result = null;
+        try {
+            result = req.origins(places)
+                    .destinations(places)
+                    .units(Unit.METRIC)
+                    .mode(TravelMode.DRIVING)
+                    .language("en-US")
+                    .await();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("distance matrix", result.toString());
+//        for (int i = 0; i < result.rows.length; i++) {
+//            long distApart = result.rows[0].elements[1].distance.inMeters;
+//        }
     }
 
     private void getDistanceAndDuration(LatLng origin, LatLng dest) {
         // TODO doesn't work
 //        final ProgressDialog mProgressDialog = ProgressDialog.show(this,"Please Wait",
 //                "collecting data...");
-        Call<Example> call = apiService.getDistanceDuration("metric", origin.latitude + "," + origin.longitude,dest.latitude + "," + dest.longitude, "driving", getResources().getString(R.string.google_maps_key));
+        Call<Example> call = apiService.getDistanceDuration(
+                "metric",
+                origin.latitude + "," + origin.longitude,
+                dest.latitude + "," + dest.longitude,
+                "driving",
+                getResources().getString(R.string.google_maps_key));
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
@@ -188,7 +229,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
                 numberOfLocations);
 
         for(int i = 0; i < pointOrderByDistance.size() - 1; i++){
-            optimizedLocationListDistance.add(mLocationDetails.get(pointOrderByDistance.get(i)));
+//            optimizedLocationListDistance.add(mLocationDetails.get((int) pointOrderByDistance.get(i)));
         }
 
 

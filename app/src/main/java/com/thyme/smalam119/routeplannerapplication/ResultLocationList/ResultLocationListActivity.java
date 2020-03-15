@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class ResultLocationListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private TextView mTotalDistanceTV, mTotalDurationTV;
-    private Button mSaveResultButton, mContinueButton;
+    private Button /* mSaveResultButton,*/ mContinueButton;
     private ResultLocationListAdapter mResultLocationListAdapter;
     private ArrayList<LocationDetail> optimizedLocationListDistance;
     private ArrayList<LocationDetail> optimizedLocationListDuration;
@@ -57,18 +57,18 @@ public class ResultLocationListActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.result_location_recycler_view);
         mTotalDistanceTV = (TextView) findViewById(R.id.total_distance);
         mTotalDurationTV = (TextView) findViewById(R.id.total_duration);
-        mSaveResultButton = (Button) findViewById(R.id.save_result_button);
-        mSaveResultButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isSaved) {
-                    Alerts.showSimpleWarning(ResultLocationListActivity.this,"Saved",
-                            "Already Location Saved");
-                } else {
-                    sendSingleRouteData();
-                }
-            }
-        });
+//        mSaveResultButton = (Button) findViewById(R.id.save_result_button);
+//        mSaveResultButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(isSaved) {
+//                    Alerts.showSimpleWarning(ResultLocationListActivity.this,"Saved",
+//                            "Already Location Saved");
+//                } else {
+//                    sendSingleRouteData();
+//                }
+//            }
+//        });
 
         mContinueButton = (Button) findViewById(R.id.continue_button);
         mContinueButton.setOnClickListener(new View.OnClickListener() {

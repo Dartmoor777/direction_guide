@@ -169,12 +169,12 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
 
     private void showLocationInfoCard() {
         mLocationInfoCard.setVisibility(View.VISIBLE);
-        mFloatingActionMenu.setVisibility(View.GONE);
+//        mFloatingActionMenu.setVisibility(View.GONE);
     }
 
     private void hideLocationInfoCard() {
         mLocationInfoCard.setVisibility(View.GONE);
-        mFloatingActionMenu.setVisibility(View.VISIBLE);
+//        mFloatingActionMenu.setVisibility(View.VISIBLE);
     }
 
     private void bindLocationDataToView(LocationDetail locationDetail) {
