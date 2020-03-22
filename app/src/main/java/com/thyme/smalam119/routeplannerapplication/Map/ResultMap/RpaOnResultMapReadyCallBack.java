@@ -1,5 +1,6 @@
 package com.thyme.smalam119.routeplannerapplication.Map.ResultMap;
 
+import android.util.Log;
 import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,7 +74,8 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
             case BY_DISTANCE:
                 mGoogleMap.clear();
                 for(int i = 0; i < optimizedLocationListDistance.size() - 1; i++) {
-                    drawRoute(optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1),i + 1);
+                    drawRoute(optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1),
+                            (i != optimizedLocationListDistance.size() - 1) ? i + 1 : 0);
                 }
                 break;
 
@@ -99,6 +101,7 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
 //                    mProgressDialog.hide();
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
+                        Log.d("drawRoute", String.format("encodedString=%s", encodedString));
                         List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
                         mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
                                 .title("Marker")

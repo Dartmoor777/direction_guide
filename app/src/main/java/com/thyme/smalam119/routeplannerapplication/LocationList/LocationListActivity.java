@@ -30,12 +30,18 @@ import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.smalam119.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
 import com.thyme.smalam119.routeplannerapplication.Utils.Permission.RuntimePermissionsActivity;
 import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.TSPEngine;
+import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.Algorithm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class LocationListActivity extends AppCompatActivity implements OnAdapterValueChanged {
 
@@ -134,14 +140,23 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 //    }
 
     private void prepareDistanceDurationList() {
+        if (numberOfLocations <= 0) {
+            Log.d("prepDistanceDurList", "zero location number");
+            return;
+        }
+
         // prepare places uri for google maps request
         StringBuilder placesBuilder = new StringBuilder("");
         for (int i = 0; numberOfLocations > 0
                 && i < numberOfLocations-1; i++) {
-            placesBuilder.append(mLocationDetails.get(i).getLatLng().toString());
+            placesBuilder.append(mLocationDetails.get(i).getLatLng().latitude);
+            placesBuilder.append(",");
+            placesBuilder.append(mLocationDetails.get(i).getLatLng().longitude);
             placesBuilder.append("|");
         }
-        placesBuilder.append(mLocationDetails.get(numberOfLocations-1).getLatLng().toString());
+        placesBuilder.append(mLocationDetails.get(numberOfLocations-1).getLatLng().latitude);
+        placesBuilder.append(",");
+        placesBuilder.append(mLocationDetails.get(numberOfLocations-1).getLatLng().longitude);
 
         String places = placesBuilder.toString();
         // should be something like that: 41.43206,-81.38992|-33.86748,151.20699|41.43896,-81.21982
@@ -168,95 +183,73 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
             e.printStackTrace();
         }
 
-        Log.d("distance matrix", result.toString());
-//        for (int i = 0; i < result.rows.length; i++) {
-//            long distApart = result.rows[0].elements[1].distance.inMeters;
-//        }
+        {
+            StringBuilder builderStr = new StringBuilder("");
+            assert result != null;
+            for (int y = 0; y < result.rows.length; y++) {
+                for (int x = 0; x < result.rows[y].elements.length; x++) {
+                    mInputMatrixForTspDistance[y][x] = (int) result.rows[y].elements[x].distance.inMeters;
+                    mInputMatrixForTspDuration[y][x] = (int) result.rows[y].elements[x].duration.inSeconds;
+                    builderStr.append(result.rows[y].elements[x].distance.inMeters);
+                    builderStr.append(" ");
+                }
+                builderStr.append("\n");
+            }
+            Log.d("matrix", String.format("The matrix is\n%s", builderStr.toString()));
+        }
     }
 
-    private void getDistanceAndDuration(LatLng origin, LatLng dest) {
-        // TODO doesn't work
-//        final ProgressDialog mProgressDialog = ProgressDialog.show(this,"Please Wait",
-//                "collecting data...");
-        Call<Example> call = apiService.getDistanceDuration(
-                "metric",
-                origin.latitude + "," + origin.longitude,
-                dest.latitude + "," + dest.longitude,
-                "driving",
-                getResources().getString(R.string.google_maps_key));
-        call.enqueue(new Callback<Example>() {
-            @Override
-            public void onResponse(Call<Example> call, Response<Example> response) {
-                try {
-//                    mProgressDialog.hide();
-                    assert response.body() != null;
-                    for (int i = 0; i < response.body().getRoutes().size(); i++) {
-                        String distance = response.body().getRoutes().get(i).getLegs().get(i).getDistance().getText();
-                        String time = response.body().getRoutes().get(i).getLegs().get(i).getDuration().getText();
-                        mDistanceList.add(distance);
-                        mDurationList.add(time);
-                    }
-                } catch (Exception e) {
-//                    mProgressDialog.hide();
-                    e.printStackTrace();
-                }
+    private double[][] convInt2DobuleMatrix(int[][] matrix) {
+        double[][] doubleMatrix = new double[matrix.length][matrix[0].length];
+        for (int y = 0; y < mInputMatrixForTspDistance.length; y++) {
+            for (int x = 0; x < mInputMatrixForTspDistance[y].length; x++) {
+                doubleMatrix[y][x] = matrix[y][x];
             }
+        }
+        return doubleMatrix;
+    }
 
-            @Override
-            public void onFailure(Call<Example> call, Throwable t) {
-//                mProgressDialog.hide();
-            }
-        });
+
+    private List<Integer> reArrangeRoute(List bestChain)
+    {
+        List<Integer> reArrangedBestChain = new ArrayList<Integer>();
+
+        bestChain.remove(bestChain.get(bestChain.size()-1));
+        int indexOfFirstElement = bestChain.indexOf(0);
+        for (int i = indexOfFirstElement
+             ; i < bestChain.size() ; i++) {
+            reArrangedBestChain.add((Integer)bestChain.get(i));
+        }
+        for (int i = 0; i < indexOfFirstElement;i++)
+        {
+            reArrangedBestChain.add((Integer)bestChain.get(i));
+        }
+        reArrangedBestChain.add((Integer)reArrangedBestChain.get(0));
+
+        return reArrangedBestChain;
     }
 
     public void getOptimizeRoute() {
-        // TODO: fix this
-        int row = -1;
-
         Log.d("getOptimizeRoute", String.format("distance list size=%d", mDistanceList.size()));
-        for (int i = 0; i < mDistanceList.size(); i++) {
-            int column = i % numberOfLocations;
-            if (column == 0)
-                row++;
-            mInputMatrixForTspDistance[row][column] = HandyFunctions.convertDistanceToMeter(mDistanceList
-                    .get(i));
-            totalDistance = totalDistance + HandyFunctions.convertDistanceToMeter(mDistanceList
-                    .get(i));
-            totalDuration = totalDuration + HandyFunctions.convertHourToMinute(mDurationList.get(i));
+
+        for (int y = 0; y < mInputMatrixForTspDistance.length; y++) {
+            for (int x = 0; x < mInputMatrixForTspDistance[y].length; x++) {
+                totalDistance += mInputMatrixForTspDistance[y][x];
+                totalDuration += mInputMatrixForTspDuration[y][x] / 60; // convert seconds to minutes
+            }
         }
+        Algorithm.newMatrix(convInt2DobuleMatrix(mInputMatrixForTspDistance));
+        Algorithm.iterate();
+        List bestChain = Arrays.stream( Algorithm.getBestChain() ).boxed().collect( Collectors.toList() );
+        bestChain = reArrangeRoute(bestChain);
+        Log.d("best chain", Arrays.toString(bestChain.toArray()));
 
-        ArrayList<Integer> pointOrderByDistance = mTspEng.computeTSP(mInputMatrixForTspDistance,
-                numberOfLocations);
 
-        for(int i = 0; i < pointOrderByDistance.size() - 1; i++){
-//            optimizedLocationListDistance.add(mLocationDetails.get((int) pointOrderByDistance.get(i)));
+        for(int i = 0; i < bestChain.size(); i++){
+            optimizedLocationListDistance.add(mLocationDetails.get((int)bestChain.get(i)));
         }
-
-
-
-
-//        for (int i = 0; i < mDurationList.size(); i++) {
-//            int column = i % numberOfLocations;
-//            if (column == 0)
-//                row++;
-//            mInputMatrixForTspDuration[row][column] = HandyFunctions.convertHourToMinute(mDurationList.get(i));
-//            totalDuration = totalDuration + HandyFunctions.convertHourToMinute(mDurationList.get(i));
-//
-//            Log.d("total duration", totalDuration + "");
-//        }
-//
-//        ArrayList<Integer> pointOrderByDuration = mTspEng.computeTSP(mInputMatrixForTspDuration,
-//                numberOfLocations);
-//
-//        Log.d("point_order_duration_size", pointOrderByDuration.size() + "");
-//
-//        for(int i = 0; i < pointOrderByDuration.size() - 1; i++){
-//            Log.d("point_order_duration", pointOrderByDuration.get(i) + "");
-//            optimizedLocationListDuration.add(mLocationDetails.get(pointOrderByDuration.get(i)));
-//        }
 
         gotoResultLists();
-
     }
 
     private void gotoResultLists() {
