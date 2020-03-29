@@ -37,6 +37,7 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     private int numberOfLocations;
     private ArrayList<LocationDetail> optimizedLocationListDistance;
     private ArrayList<LocationDetail> optimizedLocationListDuration;
+    private boolean isAntAlgo;
     private ApiInterface apiService;
     public RpaLocationListener rpaLocationListener;
 
@@ -46,6 +47,7 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
         mLocationDetailSharedPrefUtils = new LocationDetailSharedPrefUtils(activity);
         mLocationDetails = mLocationDetailSharedPrefUtils.getLocationDataFromSharedPref();
         numberOfLocations = mLocationDetails.size();
+        isAntAlgo = (boolean) mActivity.getIntent().getSerializableExtra("isAntAlgo");
         optimizedLocationListDistance = (ArrayList<LocationDetail> )mActivity.getIntent().getSerializableExtra("optimizedLocationListDistance");
         optimizedLocationListDuration = (ArrayList<LocationDetail>) mActivity.getIntent().getSerializableExtra("optimizedLocationListDuration");
         apiService = RetroFitClient.getClient().create(ApiInterface.class);
@@ -74,8 +76,9 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
             case BY_DISTANCE:
                 mGoogleMap.clear();
                 for(int i = 0; i < optimizedLocationListDistance.size() - 1; i++) {
-                    drawRoute(optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1),
-                            (i != optimizedLocationListDistance.size() - 1) ? i + 1 : 0);
+                    int index = (isAntAlgo && i == (optimizedLocationListDistance.size() - 2))
+                            ?  0 : i + 1;
+                    drawRoute( optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1), index);
                 }
                 break;
 

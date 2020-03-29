@@ -1,6 +1,5 @@
 package com.thyme.smalam119.routeplannerapplication.LocationList;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
@@ -20,15 +17,14 @@ import com.google.maps.model.DistanceMatrix;
 
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
-import com.thyme.smalam119.routeplannerapplication.Model.Direction.Example;
+import com.thyme.smalam119.routeplannerapplication.Map.InputMap.MainActivity;
 import com.thyme.smalam119.routeplannerapplication.Model.LocationDetail;
 import com.thyme.smalam119.routeplannerapplication.NetworkCalls.ApiInterface;
-import com.thyme.smalam119.routeplannerapplication.NetworkCalls.RetroFitClient;
 import com.thyme.smalam119.routeplannerapplication.R;
 import com.thyme.smalam119.routeplannerapplication.ResultLocationList.ResultLocationListActivity;
+import com.thyme.smalam119.routeplannerapplication.Utils.DijkstraEngine.DijkstrasV2;
 import com.thyme.smalam119.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.smalam119.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
-import com.thyme.smalam119.routeplannerapplication.Utils.Permission.RuntimePermissionsActivity;
 import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.TSPEngine;
 import com.thyme.smalam119.routeplannerapplication.Utils.TSPEngine.Algorithm;
 
@@ -38,16 +34,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 public class LocationListActivity extends AppCompatActivity implements OnAdapterValueChanged {
 
     //view
     private RecyclerView mLocationRecyclerView;
     private Button mOptimizeButton;
+    private Button mDijkstraButton;
 
     //managers
     private LocationDetailSharedPrefUtils mLocationDetailSharedPrefUtils;
@@ -61,6 +54,8 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     private ArrayList<String> mDurationList;
     public ArrayList<LocationDetail> optimizedLocationListDistance;
     public ArrayList<LocationDetail> optimizedLocationListDuration;
+    public boolean isAntAlgo;
+
 
     //others
     private int numberOfLocations;
@@ -116,14 +111,26 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 
     private void prepareView() {
         mLocationRecyclerView = findViewById(R.id.location_recycler_view);
-        mOptimizeButton = findViewById(R.id.optimize_button);
+        mOptimizeButton = findViewById(R.id.tsp_button);
         mOptimizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("LocationListActivity", "optimize onClick");
+                isAntAlgo = true;
                 getOptimizeRoute();
             }
         });
+
+        mDijkstraButton = findViewById(R.id.dijkstras_button);
+        mDijkstraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("LocationListActivity", "Dijkstra onClick");
+                isAntAlgo = false;
+                getDijkstraRoute();
+            }
+        });
+
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mLocationRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(8));
@@ -133,11 +140,12 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         mLocationRecyclerView.setAdapter(locationListAdapter);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        startActivity(new Intent(this, LoginActivity.class));
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
 
     private void prepareDistanceDurationList() {
         if (numberOfLocations <= 0) {
@@ -186,8 +194,12 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         {
             StringBuilder builderStr = new StringBuilder("");
             assert result != null;
+
+            Log.d("Received origins", Arrays.toString(result.originAddresses));
+            Log.d("Received destinations", Arrays.toString(result.destinationAddresses));
             for (int y = 0; y < result.rows.length; y++) {
                 for (int x = 0; x < result.rows[y].elements.length; x++) {
+
                     mInputMatrixForTspDistance[y][x] = (int) result.rows[y].elements[x].distance.inMeters;
                     mInputMatrixForTspDuration[y][x] = (int) result.rows[y].elements[x].duration.inSeconds;
                     builderStr.append(result.rows[y].elements[x].distance.inMeters);
@@ -232,21 +244,58 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     public void getOptimizeRoute() {
         Log.d("getOptimizeRoute", String.format("distance list size=%d", mDistanceList.size()));
 
-        for (int y = 0; y < mInputMatrixForTspDistance.length; y++) {
-            for (int x = 0; x < mInputMatrixForTspDistance[y].length; x++) {
-                totalDistance += mInputMatrixForTspDistance[y][x];
-                totalDuration += mInputMatrixForTspDuration[y][x] / 60; // convert seconds to minutes
-            }
-        }
+
         Algorithm.newMatrix(convInt2DobuleMatrix(mInputMatrixForTspDistance));
         Algorithm.iterate();
-        List bestChain = Arrays.stream( Algorithm.getBestChain() ).boxed().collect( Collectors.toList() );
+        List<Integer> bestChain = (List<Integer>)(List<?>) Arrays.stream( Algorithm.getBestChain() ).boxed().collect( Collectors.toList() );
         bestChain = reArrangeRoute(bestChain);
         Log.d("best chain", Arrays.toString(bestChain.toArray()));
 
+        for (int i = 0; i < bestChain.size()-1; i++) {
+            totalDistance += mInputMatrixForTspDistance[bestChain.get(i)][bestChain.get(i+1)];
+            totalDuration += mInputMatrixForTspDuration[bestChain.get(i)][bestChain.get(i+1)] / 60;
+        }
 
         for(int i = 0; i < bestChain.size(); i++){
-            optimizedLocationListDistance.add(mLocationDetails.get((int)bestChain.get(i)));
+            optimizedLocationListDistance.add(mLocationDetails.get(bestChain.get(i)));
+        }
+
+        gotoResultLists();
+    }
+
+    public List<Integer> getDijkstrasBestPath(int start, int end) {
+        DijkstrasV2 dijkstras = new DijkstrasV2(mInputMatrixForTspDistance.length);
+        StringBuilder logBuilder = new StringBuilder();
+
+        for (int y = 0; y < mInputMatrixForTspDistance.length; y++) {
+            for (int x = 0; x < mInputMatrixForTspDistance[y].length; x++) {
+                if (y == x) continue; // skip empty cells in the matrix
+                if (y == start && x == end
+                        || x == start && y == end) {
+                    continue; // do not add Vertex which connects starts and end
+                }
+
+                logBuilder.append(String.format("Add Edge(%d, %d)=%d\n", y, x, mInputMatrixForTspDistance[y][x]));
+                dijkstras.addEdge(y, x, mInputMatrixForTspDistance[y][x]);
+            }
+        }
+        Log.d("DijkstrasV2", logBuilder.toString());
+        return dijkstras.reconstructPath(start, end);
+    }
+
+    public void getDijkstraRoute() {
+//        List<Integer> bestPath = Dijkstras.getBestPath(mInputMatrixForTspDistance, 0, 1);
+        List<Integer> bestPath = getDijkstrasBestPath(0, 1); // start point at 0 and end point at 1 index in array
+
+        Log.d("best path", Arrays.toString(bestPath.toArray()));
+
+        for (int i = 0; i < bestPath.size()-1; i++) {
+            totalDistance += mInputMatrixForTspDistance[bestPath.get(i)][bestPath.get(i+1)];
+            totalDuration += mInputMatrixForTspDuration[bestPath.get(i)][bestPath.get(i+1)] / 60;
+        }
+
+        for(int i = 0; i < bestPath.size(); i++){
+            optimizedLocationListDistance.add(mLocationDetails.get(bestPath.get(i)));
         }
 
         gotoResultLists();
@@ -257,6 +306,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         Intent intent = new Intent(this, ResultLocationListActivity.class);
         intent.putExtra("optimizedLocationListDistance", optimizedLocationListDistance);
         intent.putExtra("optimizedLocationListDuration", optimizedLocationListDuration);
+        intent.putExtra("isAntAlgo", isAntAlgo);
         Log.d("gotoResultLists", String.format("totalDistance=%d", totalDistance));
         Log.d("gotoResultLists", String.format("totalDuration=%d", totalDuration));
         intent.putExtra("totalDistance", HandyFunctions.convertMeterToKiloMeter(totalDistance));

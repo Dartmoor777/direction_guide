@@ -27,6 +27,7 @@ public class ResultLocationListActivity extends AppCompatActivity {
     private ResultLocationListAdapter mResultLocationListAdapter;
     private ArrayList<LocationDetail> optimizedLocationListDistance;
     private ArrayList<LocationDetail> optimizedLocationListDuration;
+    private boolean isAntAlgo;
     private double mTotalDistance;
     private float mTotalDuration;
     private ArrayList<SingleRoute> mPreviousRoutes;
@@ -46,6 +47,7 @@ public class ResultLocationListActivity extends AppCompatActivity {
     }
 
     private void prepareLists() {
+        isAntAlgo = (boolean) getIntent().getSerializableExtra("isAntAlgo");
         optimizedLocationListDistance = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDistance");
         optimizedLocationListDuration = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDuration");
         mTotalDistance = getIntent().getDoubleExtra("totalDistance",0.0);
@@ -111,6 +113,7 @@ public class ResultLocationListActivity extends AppCompatActivity {
         Intent intent = new Intent(ResultLocationListActivity.this, ResultMapActivity.class);
         intent.putExtra("optimizedLocationListDistance", optimizedLocationListDistance);
         intent.putExtra("optimizedLocationListDuration", optimizedLocationListDuration);
+        intent.putExtra("isAntAlgo", isAntAlgo);
         startActivity(intent);
     }
 
