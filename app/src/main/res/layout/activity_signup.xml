@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_color_gradient_alternative"
-    tools:context="com.thyme.smalam119.routeplannerapplication.Login.LoginActivity">
+    tools:context="com.thyme.yaslan99.routeplannerapplication.Login.LoginActivity">
 
     <TextView
         android:layout_width="match_parent"

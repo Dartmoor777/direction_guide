@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thyme.smalam119.routeplannerapplication.Map.InputMap.MainActivity"
+    tools:context="com.thyme.yaslan99.routeplannerapplication.Map.InputMap.MainActivity"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.thyme.smalam119.routeplannerapplication.CustomView.LocationInfoCard
+    <com.thyme.yaslan99.routeplannerapplication.CustomView.LocationInfoCard
         android:id="@+id/location_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true">
-    </com.thyme.smalam119.routeplannerapplication.CustomView.LocationInfoCard>
+    </com.thyme.yaslan99.routeplannerapplication.CustomView.LocationInfoCard>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floating_menu"

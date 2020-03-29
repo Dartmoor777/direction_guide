@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.thyme.smalam119.routeplannerapplication"
+        applicationId "com.thyme.yaslan99.routeplannerapplication"
         minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
