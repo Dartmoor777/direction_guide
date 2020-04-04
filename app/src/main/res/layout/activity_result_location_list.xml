@@ -35,7 +35,7 @@
             android:id="@+id/total_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Distance Covered: 10 km"
+            android:text="Total Duration Covered: 10 km"
             android:textSize="20dp"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"

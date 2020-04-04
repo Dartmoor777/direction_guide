@@ -58,7 +58,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             getLocationDetail(location.getLatitude(),location.getLongitude(),mActivity);
             putMarker(mLocationDetail);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 14.0f));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), Cons.CAMERA_ZOOM));
         } else {
             Toast.makeText(mActivity,"Current location not found. Please check location settings",Toast.LENGTH_LONG).show();
         }
@@ -130,11 +130,11 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
         Log.d("initializeMap", String.format("locations' size=%d", mActivity.locationDetails.size()));
         if(mActivity.locationDetails.size() == 0) {
             mGoogleMap.clear();
-            mGoogleMap.setMinZoomPreference(13.0f);
-            mGoogleMap.setMaxZoomPreference(16.0f);
+            mGoogleMap.setMinZoomPreference(Cons.MIN_ZOOM);
+            mGoogleMap.setMaxZoomPreference(Cons.MAX_ZOOM);
 //            mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, 14.0f));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, Cons.CAMERA_ZOOM));
         } else {
             for(LocationDetail locationDetail : mActivity.locationDetails) {
                 putMarker(locationDetail);
@@ -142,7 +142,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mActivity.locationDetails.
                     get(mActivity.locationDetails.size() - 1).getLatLng()));
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mActivity.locationDetails.
-                    get(mActivity.locationDetails.size() - 1).getLatLng(), 14.0f));
+                    get(mActivity.locationDetails.size() - 1).getLatLng(), Cons.CAMERA_ZOOM));
         }
     }
 

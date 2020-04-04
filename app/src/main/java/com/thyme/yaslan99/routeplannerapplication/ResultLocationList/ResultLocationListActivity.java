@@ -28,7 +28,7 @@ public class ResultLocationListActivity extends AppCompatActivity {
     private ArrayList<LocationDetail> optimizedLocationListDuration;
     private boolean isAntAlgo;
     private double mTotalDistance;
-    private float mTotalDuration;
+    private int mTotalDuration;
     private ArrayList<SingleRoute> mPreviousRoutes;
     private boolean isSaved = false;
 
@@ -50,7 +50,7 @@ public class ResultLocationListActivity extends AppCompatActivity {
         optimizedLocationListDistance = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDistance");
         optimizedLocationListDuration = (ArrayList<LocationDetail>) getIntent().getSerializableExtra("optimizedLocationListDuration");
         mTotalDistance = getIntent().getDoubleExtra("totalDistance",0.0);
-        mTotalDuration = getIntent().getFloatExtra("totalDuration",0.0f);
+        mTotalDuration = getIntent().getIntExtra("totalDuration",0);
         mPreviousRoutes = new ArrayList<>();
     }
 
@@ -79,8 +79,8 @@ public class ResultLocationListActivity extends AppCompatActivity {
             }
         });
 
-        mTotalDistanceTV.setText("Total Distance: " + mTotalDistance + " " + "km");
-        mTotalDurationTV.setText("Total Duration: " + mTotalDuration + " " + "hr");
+        mTotalDistanceTV.setText(getString(R.string.total_distance, mTotalDistance));
+        mTotalDurationTV.setText(getString(R.string.total_duration, mTotalDuration / 60, mTotalDuration % 60));
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);

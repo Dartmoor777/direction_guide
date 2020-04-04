@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<!--    name="colorPrimary">#FF4081-->
     <color
-        name="colorPrimary">#FF4081
+        name="colorPrimary">#303F9F
+    </color>
+    <color
+        name="turquoise">#3BF2E7
     </color>
     <color
         name="colorPrimaryDark">#303F9F
@@ -23,5 +27,8 @@
     </color>
     <color
         name="green">#a4c639
+    </color>
+    <color
+        name="red">#FF0000
     </color>
 </resources>

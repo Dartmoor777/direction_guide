@@ -285,7 +285,8 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 
     public void getDijkstraRoute() {
 //        List<Integer> bestPath = Dijkstras.getBestPath(mInputMatrixForTspDistance, 0, 1);
-        List<Integer> bestPath = getDijkstrasBestPath(0, 1); // start point at 0 and end point at 1 index in array
+        // start point at 0 and end point at last index in array
+        List<Integer> bestPath = getDijkstrasBestPath(0, mInputMatrixForTspDistance.length-1);
 
         Log.d("best path", Arrays.toString(bestPath.toArray()));
 
@@ -310,7 +311,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         Log.d("gotoResultLists", String.format("totalDistance=%d", totalDistance));
         Log.d("gotoResultLists", String.format("totalDuration=%d", totalDuration));
         intent.putExtra("totalDistance", HandyFunctions.convertMeterToKiloMeter(totalDistance));
-        intent.putExtra("totalDuration", HandyFunctions.convertMinuteToHour(totalDuration));
+        intent.putExtra("totalDuration", totalDuration);
         startActivity(intent);
         finish();
     }

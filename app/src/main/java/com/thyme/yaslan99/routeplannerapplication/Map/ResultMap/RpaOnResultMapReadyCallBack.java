@@ -62,11 +62,11 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     }
 
     private void prepareMap() {
-        mGoogleMap.setMinZoomPreference(13.0f);
-        mGoogleMap.setMaxZoomPreference(16.0f);
+        mGoogleMap.setMinZoomPreference(Cons.MIN_ZOOM);
+        mGoogleMap.setMaxZoomPreference(Cons.MAX_ZOOM);
 //        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, 14.0f));
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, Cons.CAMERA_ZOOM));
     }
 
     public void drawRoute(OptimizationType optimizationType) {

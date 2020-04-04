@@ -30,22 +30,16 @@
                 android:id="@+id/cross_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cross"
+                android:background="@drawable/cross_blu"
                 android:layout_alignParentRight="true"/>
 
-            <View
-                android:id="@+id/straight_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/latlng_list_view"
-                android:background="@color/grey"></View>
-            
+
             <TextView
                 android:id="@+id/location_title_list_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lat_lng_placeholder"
-                android:layout_below="@id/straight_line"
+                android:layout_below="@id/cross_button"
                 android:layout_marginTop="@dimen/margin_8dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20dp"/>
@@ -59,6 +53,14 @@
                 android:layout_marginBottom="@dimen/margin_4dp"
                 android:textColor="@color/black"
                 android:textSize="16dp"/>
+
+            <View
+                android:id="@+id/straight_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/location_info_list_view"
+                android:background="@color/grey"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

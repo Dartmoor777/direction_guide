@@ -15,6 +15,7 @@ import com.thyme.yaslan99.routeplannerapplication.Map.NotificationMap.Notificati
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
 import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Alerts;
+import com.thyme.yaslan99.routeplannerapplication.Utils.Cons;
 import com.thyme.yaslan99.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
 import java.util.ArrayList;
 
@@ -118,13 +119,15 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         mNumberOfLocationAddedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(notificationCount >= 2) {
+                if(notificationCount >= Cons.MIN_LOCATION_COUNT) {
                     Intent intent = new Intent(MainActivity.this, LocationListActivity.class);
                     mLocationDetailSharedPrefUtils.setLocationDataToSharedPref(locationDetails);
                     startActivity(intent);
                     finish();
                 } else {
-                    Alerts.showSimpleWarning(MainActivity.this,"warning","Choose two or more locations first");
+                    Alerts.showSimpleWarning(MainActivity.this,
+                            "warning",
+                            String.format("Choose %d or more locations first", Cons.MIN_LOCATION_COUNT));
                 }
             }
         });
@@ -132,21 +135,18 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         mLocationInfoCard.getSelectButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mNumberOfLocationAddedButton.setBackgroundResource(R.drawable.marker);
                 LocationDetail locationDetail = mLocationInfoCard.getLocationData();
                 locationDetails.add(locationDetail);
                 notificationCount = locationDetails.size();
-                mNotificationCountTV.setText(notificationCount + "");
+                mNotificationCountTV.setText(String.valueOf(notificationCount));
             }
         });
 
         if(locationDetails.size() == 0) {
-            mNumberOfLocationAddedButton.setBackgroundResource(R.drawable.marker_white);
-            mNotificationCountTV.setText(0 + "");
+            mNotificationCountTV.setText(String.valueOf(0));
         } else {
-            mNumberOfLocationAddedButton.setBackgroundResource(R.drawable.marker);
             notificationCount = locationDetails.size();
-            mNotificationCountTV.setText(notificationCount + "");
+            mNotificationCountTV.setText(String.valueOf(notificationCount));
         }
 
 		MainActivity.super.checkPermission();
