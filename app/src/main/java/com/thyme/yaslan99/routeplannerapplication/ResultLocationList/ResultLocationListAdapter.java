@@ -1,13 +1,15 @@
 package com.thyme.yaslan99.routeplannerapplication.ResultLocationList;
 
-import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
 import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Alerts;
+
 import java.util.ArrayList;
 
 /**
@@ -15,10 +17,10 @@ import java.util.ArrayList;
  */
 
 public class ResultLocationListAdapter extends RecyclerView.Adapter<ResultLocationListViewHolder> {
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private ArrayList<LocationDetail> locationDetails;
 
-    public ResultLocationListAdapter(Activity mContext, ArrayList<LocationDetail> locationDetails) {
+    public ResultLocationListAdapter(AppCompatActivity mContext, ArrayList<LocationDetail> locationDetails) {
         this.mContext = mContext;
         this.locationDetails = locationDetails;
     }

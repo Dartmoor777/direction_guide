@@ -34,4 +34,7 @@
     <color
         name="red">#FF0000
     </color>
+    <color
+        name="purple">#BC9ADA
+    </color>
 </resources>

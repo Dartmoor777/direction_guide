@@ -1,7 +1,7 @@
 package com.thyme.yaslan99.routeplannerapplication.Utils;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by Yaroslava Landyga
@@ -10,9 +10,9 @@ import android.app.ProgressDialog;
 public class BasicProgressBar {
 
     private ProgressDialog progress;
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
 
-    public BasicProgressBar(Activity activity, String message) {
+    public BasicProgressBar(AppCompatActivity activity, String message) {
         this.mActivity = activity;
         progress=new ProgressDialog(activity);
         progress.setMessage(message);

@@ -3,7 +3,7 @@
      android:layout_height="wrap_content"
     android:layout_width="match_parent">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_8dp"
@@ -35,7 +35,7 @@
                     android:gravity="left"
                     android:text="@string/locationTitle_placeholder"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/title_text_size_20dp" />
+                    android:textSize="@dimen/title_text_size_20sp" />
 
                 <Button
                     android:id="@+id/select_button"
@@ -44,7 +44,7 @@
                     android:layout_weight="1"
                     android:text="@string/select"
                     android:textColor="@color/white"
-                    style="@style/RoundedSelectButton"/>
+                    android:background="@drawable/rounded_select_button"/>
 
             </LinearLayout>
 
@@ -94,6 +94,6 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

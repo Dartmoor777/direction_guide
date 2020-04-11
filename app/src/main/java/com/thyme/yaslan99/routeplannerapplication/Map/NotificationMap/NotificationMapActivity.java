@@ -1,6 +1,6 @@
 package com.thyme.yaslan99.routeplannerapplication.Map.NotificationMap;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.thyme.yaslan99.routeplannerapplication.R;

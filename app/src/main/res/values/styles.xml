@@ -18,7 +18,7 @@
     </style>
 
     <style name="MenuLabelsStyle">
-        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="background">@drawable/fab_label_background</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">2</item>
@@ -27,7 +27,7 @@
 
 
     <style name="RoundedSelectButton">
-        <item name="android:background">@drawable/rounded_select_button</item>
+        <item name="background">@drawable/rounded_select_button</item>
     </style>
 
 

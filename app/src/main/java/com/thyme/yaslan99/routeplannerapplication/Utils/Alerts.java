@@ -1,8 +1,8 @@
 package com.thyme.yaslan99.routeplannerapplication.Utils;
 
-import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by Yaroslava Landyga
@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 
 public class Alerts {
 
-    public static void simpleAlert(final Activity activity, String title, String buttonText) {
+    public static void simpleAlert(final AppCompatActivity activity, String title, String buttonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
         builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
@@ -28,7 +28,7 @@ public class Alerts {
         builder.show();
     }
 
-    public static void simpleAlertWithMessage(final Activity activity, String title, String message, String buttonText) {
+    public static void simpleAlertWithMessage(final AppCompatActivity activity, String title, String message, String buttonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
         builder.setMessage(message);
@@ -40,7 +40,7 @@ public class Alerts {
         builder.show();
     }
 
-    public static void showSimpleWarning(final Activity activity, String title, String message) {
+    public static void showSimpleWarning(final AppCompatActivity activity, String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
         builder.setMessage(message);

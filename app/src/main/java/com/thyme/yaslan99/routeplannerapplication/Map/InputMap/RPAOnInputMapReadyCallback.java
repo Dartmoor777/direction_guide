@@ -9,8 +9,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Vibrator;
-import android.support.v4.app.ActivityCompat;
-import android.telecom.Call;
+import androidx.core.app.ActivityCompat;
+
 import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,22 +20,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlaceAutocompleteRequest;
-import com.google.maps.PlaceDetailsRequest;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.AutocompletePrediction;
-import com.google.maps.model.PlaceDetails;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
-import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Cons;
 import com.thyme.yaslan99.routeplannerapplication.Utils.HandyFunctions;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import com.google.maps.PlacesApi;
 
 /**
  * Created by Yaroslava Landyga

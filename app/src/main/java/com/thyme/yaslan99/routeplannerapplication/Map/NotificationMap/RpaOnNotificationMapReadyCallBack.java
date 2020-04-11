@@ -1,13 +1,14 @@
 package com.thyme.yaslan99.routeplannerapplication.Map.NotificationMap;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,12 +24,12 @@ import java.util.ArrayList;
  */
 
 public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     private Vibrator mVibrate;
     private ArrayList<LocationAlert> locationAlerts;
     private GoogleMap mGoogleMap;
 
-    public RpaOnNotificationMapReadyCallBack(Activity activity) {
+    public RpaOnNotificationMapReadyCallBack(AppCompatActivity activity) {
         this.mActivity = activity;
         mVibrate = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
         locationAlerts = new ArrayList<>();

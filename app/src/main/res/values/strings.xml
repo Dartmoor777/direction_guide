@@ -15,7 +15,7 @@
     <string name="address_line_placeholder">Ukraine, Kyiv, Darnytca</string>
     <string name="distance_placeholder">1.6 MILES AWAY</string>
     <string name="open_time_placeholder">OPEN 10:30 AM - 12:30 AM</string>
-    <string name="lat_lng_placeholder">50°26'29.0"N 30°29'20.6"E</string>
+    <string name="lat_lng_placeholder">50°26\'29.0"N 30°29\'20.6"E</string>
     <string name="tsp">All Points</string>
     <string name="dijkstras">Fastest Route</string>
     <string name="by_distance">By Distance</string>
@@ -24,4 +24,5 @@
     <string name="app_name">yas_project</string>
     <string name="total_distance">Total Distance: %1$.2f km</string>
     <string name="total_duration">Total Duration: %1$dh, %2$dm</string>
+    <string name="lets_get_started">Let\'s get started</string>
 </resources>

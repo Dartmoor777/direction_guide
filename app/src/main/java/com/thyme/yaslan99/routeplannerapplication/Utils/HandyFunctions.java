@@ -1,6 +1,5 @@
 package com.thyme.yaslan99.routeplannerapplication.Utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,8 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.thyme.yaslan99.routeplannerapplication.R;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class HandyFunctions {
         return s.substring(0,1);
     }
 
-    public static void gotoSystemSettings(Activity activity) {
+    public static void gotoSystemSettings(AppCompatActivity activity) {
         Intent dialogIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(dialogIntent);
@@ -122,7 +123,7 @@ public class HandyFunctions {
         }
     }
 
-    public static Bitmap getMarkerIcon(Activity activity, String alphabet, int color) {
+    public static Bitmap getMarkerIcon(AppCompatActivity activity, String alphabet, int color) {
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(100, 100, conf);
 
