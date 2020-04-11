@@ -10,7 +10,7 @@
     <string name="profile">Profile</string>
     <string name="Notification">Notification</string>
     <string name="current_location">Current Location</string>
-    <string name="locationTitle_placeholder">Mc Donalds</string>
+    <string name="locationTitle_placeholder">Mc Donalds\nblabla</string>
     <string name="select">Select</string>
     <string name="address_line_placeholder">Ukraine, Kyiv, Darnytca</string>
     <string name="distance_placeholder">1.6 MILES AWAY</string>

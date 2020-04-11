@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.telecom.Call;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,12 +19,23 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PlaceAutocompleteRequest;
+import com.google.maps.PlaceDetailsRequest;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.AutocompletePrediction;
+import com.google.maps.model.PlaceDetails;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
+import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Cons;
 import com.thyme.yaslan99.routeplannerapplication.Utils.HandyFunctions;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import com.google.maps.PlacesApi;
 
 /**
  * Created by Yaroslava Landyga
@@ -74,12 +86,47 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             public void onMapLongClick(LatLng latLng) {
                 mVibrate.vibrate(100);
                 mGoogleMap.clear();
-                getLocationDetail(latLng.latitude,latLng.longitude,mActivity);
+                try {
+                    getLocationDetail(latLng.latitude,latLng.longitude,mActivity);
+                    onMapInteractionCallBack.onMapLongClick(mLocationDetail);
+                } catch (RuntimeException ex) {
+                    // do nothing
+                }
                 putMarker(mLocationDetail);
                 putPreviousMarkers();
             }
         });
 
+        googleMap.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
+            @Override
+            public void onPoiClick(PointOfInterest pointOfInterest) {
+
+                Log.d("onPoiClick", String.format("poi, name: %s", pointOfInterest.name));
+                mGoogleMap.clear();
+                try {
+                    getLocationDetail(pointOfInterest.latLng.latitude, pointOfInterest.latLng.longitude, mActivity);
+
+                    // take only two first lines of name
+                    String[] nameLines = pointOfInterest.name.split("\n");
+                    StringBuilder titleBld = new StringBuilder("");
+                    for (int i = 0; i < nameLines.length && i < 2; i++) {
+                        titleBld.append(nameLines[i]);
+                        if (i == 0) titleBld.append("\n");
+                        if (i == 1 && nameLines.length > 2
+                                && !nameLines[i].endsWith("...")) {
+                            titleBld.append("...");
+                        }
+                    }
+
+                    mLocationDetail.setLocationTitle(titleBld.toString());
+                    onMapInteractionCallBack.onMapLongClick(mLocationDetail);
+                } catch ( RuntimeException ex) {
+                    // do nothing
+                }
+                putMarker(mLocationDetail);
+                putPreviousMarkers();
+            }
+        });
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -96,8 +143,10 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
             if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
-                LocationDetail locationDetail = prepareLocationDetailModel(address);
-                onMapInteractionCallBack.onMapLongClick(locationDetail);
+                LocationDetail locationDetail = prepareLocationDetailModel(address, latitude, longitude);
+            } else {
+                Log.e("getLocationDetail: ", "failed to set up address");
+                throw new RuntimeException("failed to set up address");
             }
 
         } catch(IOException e) {
@@ -105,17 +154,65 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
         }
     }
 
-    private LocationDetail prepareLocationDetailModel(Address address) {
+    private LocationDetail prepareLocationDetailModel(Address address, double latitude, double longitude) {
         mLocationDetail.setAddressLine(address.getAddressLine(0));
-        String subLocality = address.getSubLocality();
-        if(subLocality == null) {
-            mLocationDetail.setLocationTitle("Unknown");
-        } else {
-            mLocationDetail.setLocationTitle(address.getSubLocality());
+
+
+//        GeoApiContext geoContext = new GeoApiContext.Builder()
+//                .apiKey(this.mActivity.getResources().getString(R.string.google_maps_key))
+//                .build();
+//
+//        PlaceAutocompleteRequest request = PlacesApi.placeAutocomplete(
+//                geoContext, String.format("%f,%f", latitude, longitude)
+//        );
+//        request.location(new com.google.maps.model.LatLng(latitude, longitude));
+//
+//        AutocompletePrediction[] locations;
+//        try {
+//            AutocompletePrediction[] locations = request.await();
+//            if (locations.length != 0) {
+////                titles.add(locations[0].description);
+//                Log.d("AutocompletePrediction", String.format("received locations:\n%s", Arrays.toString(locations)));
+//                Log.d("AutocompletePrediction", String.format("first location desc: %s", locations[0].description));
+//
+//                PlaceDetailsRequest detailsRequest = new PlaceDetailsRequest(geoContext);
+//                PlaceDetails details = detailsRequest.placeId(locations[0].placeId).await();
+////                titles.add(details.name);
+//                Log.d("PlaceDetails", String.format("details.name: %s", details.name));
+//            } else {
+//                Log.d("AutocompletePrediction", "received empty autocomplete locations");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.d("Shit", "shit happened");
+//        }
+
+
+        List<String> titles = Arrays.asList(
+                (address.getThoroughfare() != null && address.getSubThoroughfare() != null)
+                        ? address.getThoroughfare() + ", " + address.getSubThoroughfare()
+                        : null,
+                address.getThoroughfare(),
+                address.getFeatureName(),
+                address.getSubLocality(),
+                address.getLocality()
+        );
+        Log.d(
+            "titles",
+                titles.toString()
+        );
+
+        String mainTitle = "Unknown";
+        for (String title : titles) {
+            if (title == null) continue;
+            mainTitle = title;
+            break;
         }
-        mLocationDetail.setLat(String.valueOf(address.getLatitude()));
-        mLocationDetail.setLng(String.valueOf(address.getLongitude()));
-        mLocationDetail.setDistance("1.5 MILES");
+
+        mLocationDetail.setLocationTitle(mainTitle);
+        mLocationDetail.setLat(String.valueOf(latitude));
+        mLocationDetail.setLng(String.valueOf(longitude));
+        mLocationDetail.setDistance("");
         mLocationDetail.setIdentifierColor(HandyFunctions.getRandomColor());
         return mLocationDetail;
     }

@@ -13,33 +13,33 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/margin_8dp"
             android:layout_marginBottom="@dimen/margin_8dp"
             android:layout_marginLeft="@dimen/margin_8dp"
-            android:layout_marginRight="@dimen/margin_8dp">
+            android:layout_marginRight="@dimen/margin_8dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3"
-                >
+                android:weightSum="3" >
 
                 <TextView
                     android:id="@+id/location_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="5dp"
+                    android:layout_height="61dp"
                     android:layout_weight="2"
+                    android:gravity="left"
                     android:text="@string/locationTitle_placeholder"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/title_text_size_20dp"
-                    android:gravity="left" />
+                    android:textSize="@dimen/title_text_size_20dp" />
 
                 <Button
                     android:id="@+id/select_button"
-                    android:layout_width="0dp"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/select"
@@ -47,6 +47,7 @@
                     style="@style/RoundedSelectButton"/>
 
             </LinearLayout>
+
 
             <TextView
                 android:id="@+id/address_line"
@@ -68,7 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="4"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/distance"

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import com.thyme.yaslan99.routeplannerapplication.Utils.TSPEngine.Algorithm;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,7 +95,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         optimizedLocationListDuration.clear();
         mInputMatrixForTspDistance = new int[numberOfLocations][numberOfLocations];
         mInputMatrixForTspDuration = new int[numberOfLocations][numberOfLocations];
-        prepareDistanceDurationList();
     }
 
     private void prepareLists() {
@@ -106,7 +107,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         optimizedLocationListDuration = new ArrayList<>();
         mInputMatrixForTspDistance = new int[numberOfLocations][numberOfLocations];
         mInputMatrixForTspDuration = new int[numberOfLocations][numberOfLocations];
-        prepareDistanceDurationList();
     }
 
     private void prepareView() {
@@ -117,6 +117,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
             public void onClick(View v) {
                 Log.d("LocationListActivity", "optimize onClick");
                 isAntAlgo = true;
+                prepareDistanceDurationList();
                 getOptimizeRoute();
             }
         });
@@ -127,6 +128,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
             public void onClick(View view) {
                 Log.d("LocationListActivity", "Dijkstra onClick");
                 isAntAlgo = false;
+                prepareDistanceDurationList();
                 getDijkstraRoute();
             }
         });
@@ -138,6 +140,22 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         locationListAdapter.onAdapterValueChanged = this;
         mLocationRecyclerView.setLayoutManager(llm);
         mLocationRecyclerView.setAdapter(locationListAdapter);
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder dragged, RecyclerView.ViewHolder target) {
+                int pos_dragged = dragged.getAdapterPosition();
+                int pos_target = target.getAdapterPosition();
+                Collections.swap(mLocationDetails, pos_dragged, pos_target);
+                locationListAdapter.notifyItemMoved(pos_dragged, pos_target);
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        helper.attachToRecyclerView(mLocationRecyclerView);
     }
 
     @Override

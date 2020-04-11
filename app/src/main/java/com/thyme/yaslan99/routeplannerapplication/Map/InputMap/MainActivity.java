@@ -3,6 +3,7 @@ package com.thyme.yaslan99.routeplannerapplication.Map.InputMap;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -61,6 +62,17 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
     @Override
     public void onPermissionsGranted(int requestCode) {
         Toast.makeText(this,"Location Permission Granted",Toast.LENGTH_LONG).show();
+    }
+
+    public boolean checkLocationDetailDuplicate(LocationDetail locationDetail) {
+        boolean found = false;
+        for (LocationDetail location : locationDetails) {
+            if (location.getLatLng().equals(locationDetail.getLatLng())) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
 
     private void prepareView() {
@@ -136,6 +148,14 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
             @Override
             public void onClick(View view) {
                 LocationDetail locationDetail = mLocationInfoCard.getLocationData();
+                if (checkLocationDetailDuplicate(locationDetail)) {
+                    Alerts.showSimpleWarning(
+                            MainActivity.this,
+                            "warning",
+                            "The place was already added to the list."
+                    );
+                    return;
+                }
                 locationDetails.add(locationDetail);
                 notificationCount = locationDetails.size();
                 mNotificationCountTV.setText(String.valueOf(notificationCount));
@@ -178,8 +198,9 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         mLocationInfoCard.setLocationTitle(locationDetail.getLocationTitle());
         mLocationInfoCard.setAddressLine(locationDetail.getAddressLine());
         mLocationInfoCard.setLatlng(locationDetail.getLat() + " , " + locationDetail.getLng());
-        mLocationInfoCard.setDistance(locationDetail.getDistance() + " " + "AWAY");
-        mLocationInfoCard.setOpenTime("11 AM to 10:20 PM");
+//        mLocationInfoCard.setDistance(locationDetail.getDistance() + " " + "AWAY");
+        mLocationInfoCard.setDistance("");
+        mLocationInfoCard.setOpenTime("");
         mLocationInfoCard.setLat(locationDetail.getLat());
         mLocationInfoCard.setLng(locationDetail.getLng());
         mLocationInfoCard.setIdentifierColor(locationDetail.getIdentifierColor());

@@ -9,7 +9,9 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/linearLayout"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:background="@color/light_grey"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +25,7 @@
             android:id="@+id/total_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Distance Covered: 10 km"
+            android:text="@string/total_distance"
             android:textSize="20dp"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
@@ -35,7 +37,7 @@
             android:id="@+id/total_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Duration Covered: 10 km"
+            android:text="@string/total_duration"
             android:textSize="20dp"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
@@ -46,9 +48,8 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="@color/colorPrimary"
-            android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:id="@+id/linearLayout_2"
             android:layout_gravity="center">
@@ -57,14 +58,17 @@
                 android:id="@+id/save_result_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:text="Save Result"
                 android:visibility="gone"/>
 
             <Button
                 android:id="@+id/continue_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="160dp"
+                android:layout_height="43dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_menu_button"
                 android:text="Continue"
                 android:textColor="@color/colorPrimary" />
 

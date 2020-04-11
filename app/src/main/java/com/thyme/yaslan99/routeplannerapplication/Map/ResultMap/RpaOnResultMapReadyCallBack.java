@@ -104,7 +104,6 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
 //                    mProgressDialog.hide();
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
-                        Log.d("drawRoute", String.format("encodedString=%s", encodedString));
                         List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
                         mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
                                 .title("Marker")
