@@ -2,7 +2,10 @@ package com.thyme.yaslan99.routeplannerapplication.Map.InputMap;
 
 import android.content.Intent;
 import androidx.appcompat.app.ActionBar;
+
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,6 +25,8 @@ import java.util.ArrayList;
 
 import android.widget.Toast;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Permission.RuntimePermissionsActivity;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends RuntimePermissionsActivity implements OnMapInteractionCallBack {
 
@@ -158,6 +163,12 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
                 locationDetails.add(locationDetail);
                 notificationCount = locationDetails.size();
                 mNotificationCountTV.setText(String.valueOf(notificationCount));
+
+                Toast toasty = Toasty.normal( view.getContext(),
+                        "The location was added successfully",
+                        Toast.LENGTH_SHORT);
+                toasty.setGravity(Gravity.TOP, 0, 160);
+                toasty.show();
             }
         });
 

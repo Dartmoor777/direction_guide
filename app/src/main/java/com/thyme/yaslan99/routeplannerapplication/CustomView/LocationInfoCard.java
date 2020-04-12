@@ -130,11 +130,5 @@ public class LocationInfoCard extends LinearLayout {
         mDistanceTV = (TextView) mRootView.findViewById(R.id.distance);
         mOpenTimeTV = (TextView) mRootView.findViewById(R.id.open_time);
         mSelectButton = (Button) mRootView.findViewById(R.id.select_button);
-        mSelectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 }

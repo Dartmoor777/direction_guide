@@ -52,7 +52,6 @@ public class image_slider extends Activity {
                 R.drawable.start_2,
                 R.drawable.start_3,
                 R.drawable.start_4
-//                0
                 );
 
         for (Integer image: images) {

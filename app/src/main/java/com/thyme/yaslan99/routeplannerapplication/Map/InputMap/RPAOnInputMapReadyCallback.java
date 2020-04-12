@@ -239,7 +239,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
         Log.d("putMarker", String.format("Make latLngSel from x1=%s, x2=%s", locationDetail.getLat(), locationDetail.getLng()));
         LatLng latLngSel = new LatLng(Double.parseDouble(locationDetail.getLat()),Double.parseDouble(locationDetail.getLng()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLngSel)
-                .title("Marker")
+                .title(locationDetail.getLocationTitle())
                 .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,
                         firstCharacterOfLocationNameNew,locationDetail.getIdentifierColor()))));
     }

@@ -76,8 +76,10 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
             case BY_DISTANCE:
                 mGoogleMap.clear();
                 for(int i = 0; i < optimizedLocationListDistance.size() - 1; i++) {
-                    int index = (isAntAlgo && i == (optimizedLocationListDistance.size() - 2))
-                            ?  0 : i + 1;
+                    int index = i + 1;
+//                    if (isAntAlgo && (i+1) == (optimizedLocationListDistance.size() - 1)) {
+//                        index = 1;
+//                    }
                     drawRoute( optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1), index);
                 }
                 break;
@@ -105,13 +107,20 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
                         List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
+                        String marker = String.valueOf(locationIndex);
                         mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
-                                .title("Marker")
-                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,locationIndex + "",origin.getIdentifierColor()))));
+                                .title(marker)
+                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,marker,origin.getIdentifierColor()))));
 
-                        mGoogleMap.addMarker(new MarkerOptions().position(dest.getLatLng())
-                                .title("Marker")
-                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,locationIndex + 1 + "",dest.getIdentifierColor()))));
+                        if (!isAntAlgo || (locationIndex + 1) != optimizedLocationListDistance.size()) {
+                            marker = String.valueOf(locationIndex+1);
+                            mGoogleMap.addMarker(new MarkerOptions().position(dest.getLatLng())
+                                    .title(marker)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
+                                            mActivity,
+                                            String.valueOf(marker),
+                                            dest.getIdentifierColor())) ));
+                        }
 
                         mGoogleMap.addPolyline(new PolylineOptions()
                                 .addAll(list)

@@ -132,7 +132,7 @@ public class HandyFunctions {
         paintCircle.setStyle(Paint.Style.FILL);
 
         Paint paintText = new Paint();
-        paintText.setColor(activity.getResources().getColor(R.color.white));
+        paintText.setColor(Color.WHITE);
         paintText.setStyle(Paint.Style.FILL_AND_STROKE);
         paintText.setTextSize(30);
 
