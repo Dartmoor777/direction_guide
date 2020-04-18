@@ -17,9 +17,9 @@ public class LocationListViewHolder extends RecyclerView.ViewHolder {
 
     public LocationListViewHolder(View itemView) {
         super(itemView);
-        locationTitleTV = (TextView) itemView.findViewById(R.id.location_title_list_view);
-        addressLineTV = (TextView) itemView.findViewById(R.id.location_info_list_view);
-        latlngTV = (TextView) itemView.findViewById(R.id.latlng_list_view);
-        crossButton = (ImageButton) itemView.findViewById(R.id.cross_button);
+        locationTitleTV = itemView.findViewById(R.id.location_title_list_view);
+        addressLineTV = itemView.findViewById(R.id.location_info_list_view);
+        latlngTV = itemView.findViewById(R.id.latlng_list_view);
+        crossButton = itemView.findViewById(R.id.cross_button);
     }
 }

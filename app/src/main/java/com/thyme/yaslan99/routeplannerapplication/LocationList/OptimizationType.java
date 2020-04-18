@@ -6,5 +6,5 @@ package com.thyme.yaslan99.routeplannerapplication.LocationList;
 
 public enum OptimizationType {
     BY_DISTANCE,
-    BY_DURATION;
+    BY_DURATION
 }

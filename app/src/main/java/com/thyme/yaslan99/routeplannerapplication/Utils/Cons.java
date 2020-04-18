@@ -17,5 +17,6 @@ public class Cons {
     public static final float MAX_ZOOM = 16.0f;
     public static final float CAMERA_ZOOM = 11.5f;
     public static final int MIN_LOCATION_COUNT = 3;
+    public static final int MAX_LOCATION_COUNT = 10;
     // public static final LatLng BUET_LATLNG = new LatLng(23.7265631, 90.3886909);
 }

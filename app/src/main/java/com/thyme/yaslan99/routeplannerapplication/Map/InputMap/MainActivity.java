@@ -70,6 +70,28 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         return found;
     }
 
+    public boolean performLocationCheks(LocationDetail locationDetail) {
+        if (checkLocationDetailDuplicate(locationDetail)) {
+            Alerts.showSimpleWarning(
+                    MainActivity.this,
+                    "warning",
+                    "The place was already added to the list."
+            );
+            return false;
+        }
+
+        if (locationDetails.size() >= Cons.MAX_LOCATION_COUNT) {
+            Alerts.showSimpleWarning(
+                    MainActivity.this,
+                    "warning",
+                    String.format("The max location count is %d", Cons.MAX_LOCATION_COUNT)
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     private void prepareView() {
         mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -108,14 +130,11 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
             @Override
             public void onClick(View view) {
                 LocationDetail locationDetail = mLocationInfoCard.getLocationData();
-                if (checkLocationDetailDuplicate(locationDetail)) {
-                    Alerts.showSimpleWarning(
-                            MainActivity.this,
-                            "warning",
-                            "The place was already added to the list."
-                    );
+
+                if (!performLocationCheks(locationDetail)) {
                     return;
                 }
+
                 locationDetails.add(locationDetail);
                 notificationCount = locationDetails.size();
                 mNotificationCountTV.setText(String.valueOf(notificationCount));
@@ -174,7 +193,6 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         bindLocationDataToView(locationDetail);
         showLocationInfoCard();
         mGlobalLocationDetail = locationDetail;
-
     }
 
     @Override

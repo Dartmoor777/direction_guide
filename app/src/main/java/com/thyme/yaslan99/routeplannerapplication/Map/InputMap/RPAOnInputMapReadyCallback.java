@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
@@ -73,6 +74,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
         initializeMap();
+
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -100,7 +102,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
 
                     // take only two first lines of name
                     String[] nameLines = pointOfInterest.name.split("\n");
-                    StringBuilder titleBld = new StringBuilder("");
+                    StringBuilder titleBld = new StringBuilder();
                     for (int i = 0; i < nameLines.length && i < 2; i++) {
                         titleBld.append(nameLines[i]);
                         if (i == 0) titleBld.append("\n");
@@ -119,10 +121,27 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
                 putPreviousMarkers();
             }
         });
+
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 onMapInteractionCallBack.onMapClick();
+            }
+        });
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (mLocationDetail == null) return false;
+
+                LatLng position = marker.getPosition();
+                LatLng prevPos = mLocationDetail.getLatLng();
+                if (position.latitude == prevPos.latitude
+                        && position.longitude == prevPos.longitude) {
+                    onMapInteractionCallBack.onMapLongClick(mLocationDetail);
+                    return true;
+                }
+                return false;
             }
         });
     }

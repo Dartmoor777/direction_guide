@@ -124,11 +124,11 @@ public class LocationInfoCard extends LinearLayout {
     private void prepareView(Context context) {
 
         mRootView = inflate(context, R.layout.location_info_card_view, this);
-        mLocationTitleTV = (TextView) mRootView.findViewById(R.id.location_title);
-        mAddressLineTV = (TextView) mRootView.findViewById(R.id.address_line);
-        mLatLngTV = (TextView) mRootView.findViewById(R.id.lat_lng);
-        mDistanceTV = (TextView) mRootView.findViewById(R.id.distance);
-        mOpenTimeTV = (TextView) mRootView.findViewById(R.id.open_time);
-        mSelectButton = (Button) mRootView.findViewById(R.id.select_button);
+        mLocationTitleTV = mRootView.findViewById(R.id.location_title);
+        mAddressLineTV = mRootView.findViewById(R.id.address_line);
+        mLatLngTV = mRootView.findViewById(R.id.lat_lng);
+        mDistanceTV = mRootView.findViewById(R.id.distance);
+        mOpenTimeTV = mRootView.findViewById(R.id.open_time);
+        mSelectButton = mRootView.findViewById(R.id.select_button);
     }
 }

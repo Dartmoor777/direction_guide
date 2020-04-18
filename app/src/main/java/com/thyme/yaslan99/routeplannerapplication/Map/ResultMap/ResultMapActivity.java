@@ -54,11 +54,11 @@ public class ResultMapActivity extends AppCompatActivity {
             }
         });
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.type_of_opt_radio_group);
-        mByDistanceRadioButton = (RadioButton) findViewById(R.id.by_distance);
+        mRadioGroup = findViewById(R.id.type_of_opt_radio_group);
+        mByDistanceRadioButton = findViewById(R.id.by_distance);
         mByDistanceRadioButton.setChecked(true);
-        mByDurationRadioButton = (RadioButton) findViewById(R.id.by_duration);
-        mNextButton = (Button) findViewById(R.id.go_main_button);
+        mByDurationRadioButton = findViewById(R.id.by_duration);
+        mNextButton = findViewById(R.id.go_main_button);
         mNextButton.setVisibility(View.GONE);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

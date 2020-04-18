@@ -17,8 +17,8 @@ public class ResultLocationListViewHolder extends RecyclerView.ViewHolder {
 
     public ResultLocationListViewHolder(View itemView) {
         super(itemView);
-        sequenceNumber = (TextView) itemView.findViewById(R.id.sequence_number_text_view);
-        locationName = (TextView) itemView.findViewById(R.id.location_name_text_view);
-        cardView = (CardView) itemView.findViewById(R.id.card_view_holder);
+        sequenceNumber = itemView.findViewById(R.id.sequence_number_text_view);
+        locationName = itemView.findViewById(R.id.location_name_text_view);
+        cardView = itemView.findViewById(R.id.card_view_holder);
     }
 }

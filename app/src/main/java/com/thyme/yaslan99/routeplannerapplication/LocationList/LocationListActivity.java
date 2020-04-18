@@ -166,7 +166,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         }
 
         // prepare places uri for google maps request
-        StringBuilder placesBuilder = new StringBuilder("");
+        StringBuilder placesBuilder = new StringBuilder();
         for (int i = 0; numberOfLocations > 0
                 && i < numberOfLocations-1; i++) {
             placesBuilder.append(mLocationDetails.get(i).getLatLng().latitude);
@@ -186,22 +186,22 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
                 .apiKey(getResources().getString(R.string.google_maps_key))
                 .build();
 
-        DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer);
+        DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer)
+                .origins(places)
+                .destinations(places)
+                .units(Unit.METRIC)
+                .mode(TravelMode.DRIVING);
+
         DistanceMatrix result = null;
         try {
-            result = req.origins(places)
-                    .destinations(places)
-                    .units(Unit.METRIC)
-                    .mode(TravelMode.DRIVING)
-                    .language("en-US")
-                    .await();
+            result = req.await();
         } catch (ApiException | InterruptedException | IOException e) {
             e.printStackTrace();
             throw new AssertionError("Failed to get distance matrix");
         }
 
         {
-            StringBuilder builderStr = new StringBuilder("");
+            StringBuilder builderStr = new StringBuilder();
             Log.d("Received origins", Arrays.toString(result.originAddresses));
             Log.d("Received destinations", Arrays.toString(result.destinationAddresses));
             for (int y = 0; y < result.rows.length; y++) {
@@ -243,7 +243,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         {
             reArrangedBestChain.add((Integer)bestChain.get(i));
         }
-        reArrangedBestChain.add((Integer)reArrangedBestChain.get(0));
+        reArrangedBestChain.add(reArrangedBestChain.get(0));
 
         return reArrangedBestChain;
     }

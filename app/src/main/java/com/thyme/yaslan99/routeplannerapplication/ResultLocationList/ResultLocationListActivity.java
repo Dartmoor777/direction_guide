@@ -49,11 +49,11 @@ public class ResultLocationListActivity extends AppCompatActivity {
     }
 
     private void prepareView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.result_location_recycler_view);
-        mTotalDistanceTV = (TextView) findViewById(R.id.total_distance);
-        mTotalDurationTV = (TextView) findViewById(R.id.total_duration);
+        mRecyclerView = findViewById(R.id.result_location_recycler_view);
+        mTotalDistanceTV = findViewById(R.id.total_distance);
+        mTotalDurationTV = findViewById(R.id.total_duration);
 
-        mContinueButton = (Button) findViewById(R.id.continue_button);
+        mContinueButton = findViewById(R.id.continue_button);
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
