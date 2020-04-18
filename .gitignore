@@ -3,6 +3,7 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.idea
 .DS_Store
 /build
 /captures
@@ -65,3 +66,5 @@ freeline_project_description.json
 
 #xml files
 app/src/main/res/values/secrets.xml
+app/src/main/res/values/google_maps_api.xml
+app/src/release/
