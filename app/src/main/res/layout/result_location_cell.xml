@@ -34,7 +34,7 @@
                 android:layout_width="1dp"
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
-                android:layout_toRightOf="@id/sequence_number_text_view"></View>
+                android:layout_toRightOf="@id/sequence_number_text_view" />
 
             <TextView
                 android:id="@+id/location_name_text_view"
