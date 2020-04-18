@@ -21,6 +21,7 @@ import com.thyme.yaslan99.routeplannerapplication.R;
  * Created by Yaroslava Landyga
  */
 
+// location listener example, currently not used
 public class RpaLocationListener implements LocationListener {
     private LocationManager mLocationManager;
     private Context mContext;
@@ -45,10 +46,7 @@ public class RpaLocationListener implements LocationListener {
         Location location = mLocationManager.getLastKnownLocation(mProvider);
         if (location != null) {
             onLocationChanged(location);
-        } else {
-
         }
-
     }
 
     public void startTracking() {

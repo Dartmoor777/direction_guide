@@ -3,18 +3,14 @@ package com.thyme.yaslan99.routeplannerapplication.Map.InputMap;
 import android.content.Intent;
 import androidx.appcompat.app.ActionBar;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.thyme.yaslan99.routeplannerapplication.CustomView.LocationInfoCard;
 import com.thyme.yaslan99.routeplannerapplication.LocationList.LocationListActivity;
-import com.thyme.yaslan99.routeplannerapplication.Map.NotificationMap.NotificationMapActivity;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
 import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Alerts;
@@ -31,12 +27,7 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends RuntimePermissionsActivity implements OnMapInteractionCallBack {
 
     //view
-    private FloatingActionButton mProfileActionButton;
-    private FloatingActionButton mNotificationActionButton;
-    private FloatingActionButton mGetCurrentLocationButton;
-    private FloatingActionButton mLogoutActionButton;
     private LocationInfoCard mLocationInfoCard;
-    private FloatingActionMenu mFloatingActionMenu;
     private TextView mNotificationCountTV;
     private ImageButton mNumberOfLocationAddedButton;
     private SupportMapFragment mMapFragment;
@@ -82,6 +73,7 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
     private void prepareView() {
         mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mMapFragment != null;
         mMapFragment.getMapAsync(mOnMapReadyCallback);
 
         ActionBar actionBar = getSupportActionBar();
@@ -91,42 +83,6 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
                 | ActionBar.DISPLAY_SHOW_HOME);
 
-        mFloatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_menu);
-
-//        mProfileActionButton = (FloatingActionButton) findViewById(R.id.profile_action_button);
-//        mProfileActionButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(MainActivity.this));
-//            }
-//        });
-
-        mNotificationActionButton = (FloatingActionButton) findViewById(R.id.notification_action_button);
-        mNotificationActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NotificationMapActivity.class));
-            }
-        });
-
-        mGetCurrentLocationButton = (FloatingActionButton) findViewById(R.id.current_location_action_button);
-        mGetCurrentLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnMapReadyCallback.markCurrentLocation();
-            }
-        });
-
-//        mLogoutActionButton = (FloatingActionButton) findViewById(R.id.log_out);
-//        mLogoutActionButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mLocationDetailSharedPrefUtils.removeAll();
-//                startActivity(new Intent(MainActivity.this));
-//                finish();
-//
-//            }
-//        });
 
         mLocationInfoCard = findViewById(R.id.location_info);
         mLocationInfoCard.setVisibility(View.GONE);
@@ -196,19 +152,16 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
 
     private void showLocationInfoCard() {
         mLocationInfoCard.setVisibility(View.VISIBLE);
-//        mFloatingActionMenu.setVisibility(View.GONE);
     }
 
     private void hideLocationInfoCard() {
         mLocationInfoCard.setVisibility(View.GONE);
-//        mFloatingActionMenu.setVisibility(View.VISIBLE);
     }
 
     private void bindLocationDataToView(LocationDetail locationDetail) {
         mLocationInfoCard.setLocationTitle(locationDetail.getLocationTitle());
         mLocationInfoCard.setAddressLine(locationDetail.getAddressLine());
         mLocationInfoCard.setLatlng(locationDetail.getLat() + " , " + locationDetail.getLng());
-//        mLocationInfoCard.setDistance(locationDetail.getDistance() + " " + "AWAY");
         mLocationInfoCard.setDistance("");
         mLocationInfoCard.setOpenTime("");
         mLocationInfoCard.setLat(locationDetail.getLat());

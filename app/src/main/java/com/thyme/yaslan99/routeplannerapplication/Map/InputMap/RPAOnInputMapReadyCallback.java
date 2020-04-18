@@ -8,6 +8,7 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.core.app.ActivityCompat;
 
@@ -75,7 +76,7 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                mVibrate.vibrate(100);
+                mVibrate.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                 mGoogleMap.clear();
                 try {
                     getLocationDetail(latLng.latitude,latLng.longitude,mActivity);
@@ -148,37 +149,6 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
     private LocationDetail prepareLocationDetailModel(Address address, double latitude, double longitude) {
         mLocationDetail.setAddressLine(address.getAddressLine(0));
 
-
-//        GeoApiContext geoContext = new GeoApiContext.Builder()
-//                .apiKey(this.mActivity.getResources().getString(R.string.google_maps_key))
-//                .build();
-//
-//        PlaceAutocompleteRequest request = PlacesApi.placeAutocomplete(
-//                geoContext, String.format("%f,%f", latitude, longitude)
-//        );
-//        request.location(new com.google.maps.model.LatLng(latitude, longitude));
-//
-//        AutocompletePrediction[] locations;
-//        try {
-//            AutocompletePrediction[] locations = request.await();
-//            if (locations.length != 0) {
-////                titles.add(locations[0].description);
-//                Log.d("AutocompletePrediction", String.format("received locations:\n%s", Arrays.toString(locations)));
-//                Log.d("AutocompletePrediction", String.format("first location desc: %s", locations[0].description));
-//
-//                PlaceDetailsRequest detailsRequest = new PlaceDetailsRequest(geoContext);
-//                PlaceDetails details = detailsRequest.placeId(locations[0].placeId).await();
-////                titles.add(details.name);
-//                Log.d("PlaceDetails", String.format("details.name: %s", details.name));
-//            } else {
-//                Log.d("AutocompletePrediction", "received empty autocomplete locations");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Log.d("Shit", "shit happened");
-//        }
-
-
         List<String> titles = Arrays.asList(
                 (address.getThoroughfare() != null && address.getSubThoroughfare() != null)
                         ? address.getThoroughfare() + ", " + address.getSubThoroughfare()
@@ -220,7 +190,6 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
             mGoogleMap.clear();
             mGoogleMap.setMinZoomPreference(Cons.MIN_ZOOM);
             mGoogleMap.setMaxZoomPreference(Cons.MAX_ZOOM);
-//            mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, Cons.CAMERA_ZOOM));
         } else {

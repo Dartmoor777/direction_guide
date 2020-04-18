@@ -1,5 +1,6 @@
 package com.thyme.yaslan99.routeplannerapplication.ResultLocationList;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ public class ResultLocationListAdapter extends RecyclerView.Adapter<ResultLocati
         this.locationDetails = locationDetails;
     }
 
+    @NonNull
     @Override
     public ResultLocationListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -37,7 +39,7 @@ public class ResultLocationListAdapter extends RecyclerView.Adapter<ResultLocati
     public void onBindViewHolder(ResultLocationListViewHolder holder, int position) {
         final LocationDetail locationDetail = locationDetails.get(position);
 
-        holder.sequenceNumber.setText(position + 1 + "");
+        holder.sequenceNumber.setText(String.valueOf(position + 1));
         holder.sequenceNumber.setTextColor(locationDetail.getIdentifierColor());
         holder.locationName.setText(locationDetail.getLocationTitle());
         holder.locationName.setTextColor(locationDetail.getIdentifierColor());

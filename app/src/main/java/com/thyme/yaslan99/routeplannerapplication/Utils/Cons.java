@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 /**
- * Created by sayedalam on 12/7/17.
+ * Created by Yaroslava Landyga
  */
 
 public class Cons {

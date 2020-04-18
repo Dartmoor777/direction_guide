@@ -33,7 +33,6 @@
         <activity android:name="com.thyme.yaslan99.routeplannerapplication.LocationList.LocationListActivity" />
         <activity android:name="com.thyme.yaslan99.routeplannerapplication.Map.ResultMap.ResultMapActivity" />
         <activity android:name="com.thyme.yaslan99.routeplannerapplication.ResultLocationList.ResultLocationListActivity" />
-        <activity android:name="com.thyme.yaslan99.routeplannerapplication.Map.NotificationMap.NotificationMapActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
 package com.thyme.yaslan99.routeplannerapplication.LocationList;
 
 /**
- * Created by sayedalam on 12/7/17.
+ * Created by Yaroslava Landyga
  */
 
 import android.content.Context;

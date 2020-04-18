@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.thyme.yaslan99.routeplannerapplication.R;
 
 /**
- * Created by sayedalam on 12/7/17.
+ * Created by Yaroslava Landyga
  */
 
 public class LocationListViewHolder extends RecyclerView.ViewHolder {

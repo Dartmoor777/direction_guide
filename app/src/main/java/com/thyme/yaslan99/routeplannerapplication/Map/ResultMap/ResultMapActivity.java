@@ -37,6 +37,7 @@ public class ResultMapActivity extends AppCompatActivity {
     private void prepareView() {
         mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_result);
+        assert mMapFragment != null;
         mMapFragment.getMapAsync(mRpaOnResultMapReadyCallBack);
 
         mOptimizeButton = findViewById(R.id.opt_button);
