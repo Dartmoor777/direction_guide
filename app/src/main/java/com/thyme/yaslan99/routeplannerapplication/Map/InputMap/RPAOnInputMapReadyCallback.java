@@ -132,7 +132,14 @@ public class RPAOnInputMapReadyCallback implements OnMapReadyCallback {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if (mLocationDetail == null) return false;
+                if (mLocationDetail == null
+                        || mLocationDetail.getLat() == null
+                        || mLocationDetail.getLng() == null) return false;
+                for (LocationDetail datail : mActivity.locationDetails) {
+                    if (datail.getLocationTitle().equals(mLocationDetail.getLocationTitle())) {
+                        return false;
+                    }
+                }
 
                 LatLng position = marker.getPosition();
                 LatLng prevPos = mLocationDetail.getLatLng();

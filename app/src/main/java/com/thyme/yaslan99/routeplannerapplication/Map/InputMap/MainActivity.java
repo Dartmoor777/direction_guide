@@ -38,7 +38,6 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
     //others
     private int notificationCount = 0;
     public ArrayList<LocationDetail> locationDetails;
-    private LocationDetail mGlobalLocationDetail;
     private LocationDetailSharedPrefUtils mLocationDetailSharedPrefUtils;
 
     @Override
@@ -192,7 +191,6 @@ public class MainActivity extends RuntimePermissionsActivity implements OnMapInt
     public void onMapLongClick(LocationDetail locationDetail) {
         bindLocationDataToView(locationDetail);
         showLocationInfoCard();
-        mGlobalLocationDetail = locationDetail;
     }
 
     @Override
