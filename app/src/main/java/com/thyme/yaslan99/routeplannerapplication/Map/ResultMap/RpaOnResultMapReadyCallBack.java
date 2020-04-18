@@ -6,24 +6,24 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.LatLng;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 import com.thyme.yaslan99.routeplannerapplication.LocationList.OptimizationType;
-import com.thyme.yaslan99.routeplannerapplication.Model.Direction.Example;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
-import com.thyme.yaslan99.routeplannerapplication.NetworkCalls.ApiInterface;
-import com.thyme.yaslan99.routeplannerapplication.NetworkCalls.RetroFitClient;
 import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.Utils.Cons;
 import com.thyme.yaslan99.routeplannerapplication.Utils.HandyFunctions;
-import com.thyme.yaslan99.routeplannerapplication.Utils.JsonParserForDirection;
-import com.thyme.yaslan99.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
+import com.google.maps.DirectionsApiRequest;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Yaroslava Landiga.
@@ -35,7 +35,6 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     private ArrayList<LocationDetail> optimizedLocationListDistance;
     private ArrayList<LocationDetail> optimizedLocationListDuration;
     private boolean isAntAlgo;
-    private ApiInterface apiService;
     public RpaLocationListener rpaLocationListener;
 
 
@@ -44,7 +43,6 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
         isAntAlgo = (boolean) mActivity.getIntent().getSerializableExtra("isAntAlgo");
         optimizedLocationListDistance = (ArrayList<LocationDetail> )mActivity.getIntent().getSerializableExtra("optimizedLocationListDistance");
         optimizedLocationListDuration = (ArrayList<LocationDetail>) mActivity.getIntent().getSerializableExtra("optimizedLocationListDuration");
-        apiService = RetroFitClient.getClient().create(ApiInterface.class);
     }
 
     @Override
@@ -85,51 +83,56 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     }
 
     private void drawRoute(final LocationDetail origin, final LocationDetail dest, final int locationIndex) {
+        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+                .apiKey(mActivity.getResources().getString(R.string.google_maps_key))
+                .build();
 
-        Call<Example> call = apiService.getDistanceDuration("metric", origin.getLat() + "," + origin.getLng(),dest.getLat() + "," + dest.getLng(), "driving", this.mActivity.getResources().getString(R.string.google_maps_key));
-        call.enqueue(new Callback<Example>() {
-            @Override
-            public void onResponse(Call<Example> call, Response<Example> response) {
-                try {
-                    assert response.body() != null;
-                    for (int i = 0; i < response.body().getRoutes().size(); i++) {
-                        String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
-                        List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
-                        String marker = String.valueOf(locationIndex);
-                        mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
-                                .title(marker)
-                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
-                                        mActivity,
-                                        marker,
-                                        origin.getIdentifierColor()))));
+        DirectionsApiRequest req = new DirectionsApiRequest(geoApiContext)
+                .units(Unit.METRIC)
+                .mode(TravelMode.DRIVING)
+                .origin(origin.getLat() + "," + origin.getLng())
+                .destination(dest.getLat() + "," + dest.getLng());
 
-                        if (!isAntAlgo || (locationIndex + 1) != optimizedLocationListDistance.size()) {
-                            marker = String.valueOf(locationIndex+1);
-                            mGoogleMap.addMarker(new MarkerOptions().position(dest.getLatLng())
-                                    .title(marker)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
-                                            mActivity,
-                                            marker,
-                                            dest.getIdentifierColor())) ));
-                        }
+        DirectionsResult result = null;
+        try {
+            result = req.await();
+        } catch (ApiException | InterruptedException | IOException e) {
+            e.printStackTrace();
+            throw new AssertionError("failed to get direction");
+        }
 
-                        mGoogleMap.addPolyline(new PolylineOptions()
-                                .addAll(list)
-                                .width(20)
-                                .color(origin.getIdentifierColor())
-                                .geodesic(true)
-                        );
-                    }
-                    mActivity.mNextButton.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < result.routes.length; i++) {
+            String marker = String.valueOf(locationIndex);
+            mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
+                    .title(marker)
+                    .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
+                            mActivity,
+                            marker,
+                            origin.getIdentifierColor()))));
+
+            if (!isAntAlgo || (locationIndex + 1) != optimizedLocationListDistance.size()) {
+                marker = String.valueOf(locationIndex+1);
+                mGoogleMap.addMarker(new MarkerOptions().position(dest.getLatLng())
+                        .title(marker)
+                        .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
+                                mActivity,
+                                marker,
+                                dest.getIdentifierColor())) ));
             }
 
-            @Override
-            public void onFailure(Call<Example> call, Throwable t) {
+            List<com.google.android.gms.maps.model.LatLng> latLngs = new ArrayList<>();
+            for (LatLng latLng : result.routes[i].overviewPolyline.decodePath()) {
+                latLngs.add(new com.google.android.gms.maps.model.LatLng(latLng.lat, latLng.lng));
             }
-        });
+            mGoogleMap.addPolyline(new PolylineOptions()
+                    .addAll(latLngs)
+                    .width(20)
+                    .color(origin.getIdentifierColor())
+                    .geodesic(true)
+            );
+        }
+        mActivity.mNextButton.setVisibility(View.VISIBLE);
+
     }
 
 }

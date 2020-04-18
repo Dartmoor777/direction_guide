@@ -16,6 +16,7 @@ public class NotificationMapActivity extends AppCompatActivity {
         prepareView();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(mRpaOnNotificationMapReadyCallBack);
     }
 

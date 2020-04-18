@@ -20,7 +20,6 @@ import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 import com.thyme.yaslan99.routeplannerapplication.Map.InputMap.MainActivity;
 import com.thyme.yaslan99.routeplannerapplication.Model.LocationDetail;
-import com.thyme.yaslan99.routeplannerapplication.NetworkCalls.ApiInterface;
 import com.thyme.yaslan99.routeplannerapplication.R;
 import com.thyme.yaslan99.routeplannerapplication.ResultLocationList.ResultLocationListActivity;
 import com.thyme.yaslan99.routeplannerapplication.Utils.DijkstraEngine.DijkstrasV2;
@@ -45,7 +44,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 
     //managers
     private LocationDetailSharedPrefUtils mLocationDetailSharedPrefUtils;
-    private ApiInterface apiService;
     private LocationListAdapter locationListAdapter;
 
     //lists
@@ -79,7 +77,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     }
 
     private void prepareUtils() {
-//        apiService = RetroFitClient.getClient().create(ApiInterface.class);
         mLocationDetailSharedPrefUtils = new LocationDetailSharedPrefUtils(getApplicationContext());
     }
 
@@ -198,18 +195,13 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
                     .mode(TravelMode.DRIVING)
                     .language("en-US")
                     .await();
-        } catch (ApiException e) {
+        } catch (ApiException | InterruptedException | IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new AssertionError("Failed to get distance matrix");
         }
 
         {
             StringBuilder builderStr = new StringBuilder("");
-            assert result != null;
-
             Log.d("Received origins", Arrays.toString(result.originAddresses));
             Log.d("Received destinations", Arrays.toString(result.destinationAddresses));
             for (int y = 0; y < result.rows.length; y++) {

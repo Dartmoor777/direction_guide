@@ -26,13 +26,11 @@ import java.util.ArrayList;
 public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
     private AppCompatActivity mActivity;
     private Vibrator mVibrate;
-    private ArrayList<LocationAlert> locationAlerts;
     private GoogleMap mGoogleMap;
 
     public RpaOnNotificationMapReadyCallBack(AppCompatActivity activity) {
         this.mActivity = activity;
         mVibrate = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-        locationAlerts = new ArrayList<>();
     }
 
     @Override
@@ -61,10 +59,6 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = notificationTitle.getText().toString();
-                String message = notificationMessage.getText().toString();
-                LocationAlert locationAlert = new LocationAlert(latLng.latitude,latLng.longitude,title,message);
-//                mFireBaseDBUtils.writeData("rpa-alerts",mFireBaseAuthUtils.getCurrentUser().getUid() + "_" + HandyFunctions.generateRandomString(),locationAlert);
                 alertDialogAndroid.dismiss();
             }
         });
@@ -74,26 +68,7 @@ public class RpaOnNotificationMapReadyCallBack implements OnMapReadyCallback {
     private void prepareMap() {
         mGoogleMap.setMinZoomPreference(Cons.MIN_ZOOM);
         mGoogleMap.setMaxZoomPreference(Cons.MAX_ZOOM);
-//        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, Cons.CAMERA_ZOOM));
     }
-
-//    @Override
-//    public void onDataChanged(DataSnapshot dataSnapshot) {
-//
-//        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//            LocationAlert locationAlert = snapshot.getValue(LocationAlert.class);
-//            mGoogleMap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(locationAlert.getmLat(), locationAlert.getmLng()))
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.road_block))
-//                    .title(locationAlert.getMessage()));
-//        }
-//
-//    }
-
-//    @Override
-//    public void onCancel(DatabaseError error) {
-//
-//    }
 }
