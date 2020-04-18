@@ -99,14 +99,14 @@ public class HandyFunctions {
     }
 
     public static double convertMeterToKiloMeter(int meter) {
-        double km = Double.valueOf(meter) * 0.001;
+        double km = (double) meter * 0.001;
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         return Double.parseDouble(df.format(km));
     }
 
     public static float convertMinuteToHour(int minute) {
-        float hr = Float.valueOf(minute) / 60;
+        float hr = (float) minute / 60;
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         return Float.parseFloat(df.format(hr));
@@ -144,7 +144,6 @@ public class HandyFunctions {
     }
 
     public static String generateRandomString() {
-        String uuid = UUID.randomUUID().toString();
-        return  uuid;
+        return UUID.randomUUID().toString();
     }
 }

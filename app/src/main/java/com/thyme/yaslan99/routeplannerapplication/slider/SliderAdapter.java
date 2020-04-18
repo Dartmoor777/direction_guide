@@ -1,4 +1,4 @@
-package com.thyme.yaslan99.routeplannerapplication;
+package com.thyme.yaslan99.routeplannerapplication.slider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.thyme.yaslan99.routeplannerapplication.Map.InputMap.MainActivity;
+import com.thyme.yaslan99.routeplannerapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;

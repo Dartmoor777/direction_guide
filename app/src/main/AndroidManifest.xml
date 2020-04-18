@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Map.InputMap.MainActivity" />
         <activity
-            android:name=".image_slider"
+            android:name=".slider.image_slider"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:launchMode="standard">
             <intent-filter>

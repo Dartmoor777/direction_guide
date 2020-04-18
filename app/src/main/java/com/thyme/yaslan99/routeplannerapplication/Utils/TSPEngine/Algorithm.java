@@ -64,7 +64,6 @@ public class Algorithm {
         }
         updatePheromone();
         updateBest();
-//        Data.isSolution = true;
     }
 
     private static void updatePheromone() {
@@ -122,7 +121,6 @@ public class Algorithm {
         }
         // transition vector
         bestChain = null;
-//        Data.isSolution = false;
     }
 
     private static class Ant {

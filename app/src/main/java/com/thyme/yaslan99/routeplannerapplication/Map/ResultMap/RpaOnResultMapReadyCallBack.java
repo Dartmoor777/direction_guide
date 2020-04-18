@@ -31,10 +31,7 @@ import retrofit2.Response;
 
 public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     private ResultMapActivity mActivity;
-    private LocationDetailSharedPrefUtils mLocationDetailSharedPrefUtils;
-    private ArrayList<LocationDetail> mLocationDetails;
     private GoogleMap mGoogleMap;
-    private int numberOfLocations;
     private ArrayList<LocationDetail> optimizedLocationListDistance;
     private ArrayList<LocationDetail> optimizedLocationListDuration;
     private boolean isAntAlgo;
@@ -44,9 +41,6 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
 
     public RpaOnResultMapReadyCallBack(ResultMapActivity activity) {
         this.mActivity = activity;
-        mLocationDetailSharedPrefUtils = new LocationDetailSharedPrefUtils(activity);
-        mLocationDetails = mLocationDetailSharedPrefUtils.getLocationDataFromSharedPref();
-        numberOfLocations = mLocationDetails.size();
         isAntAlgo = (boolean) mActivity.getIntent().getSerializableExtra("isAntAlgo");
         optimizedLocationListDistance = (ArrayList<LocationDetail> )mActivity.getIntent().getSerializableExtra("optimizedLocationListDistance");
         optimizedLocationListDuration = (ArrayList<LocationDetail>) mActivity.getIntent().getSerializableExtra("optimizedLocationListDuration");
@@ -64,7 +58,6 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     private void prepareMap() {
         mGoogleMap.setMinZoomPreference(Cons.MIN_ZOOM);
         mGoogleMap.setMaxZoomPreference(Cons.MAX_ZOOM);
-//        mGoogleMap.setLatLngBoundsForCameraTarget(Cons.KYIV_BOUND);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(Cons.KYIV_LATLNG));
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cons.KYIV_LATLNG, Cons.CAMERA_ZOOM));
     }
@@ -76,11 +69,7 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
             case BY_DISTANCE:
                 mGoogleMap.clear();
                 for(int i = 0; i < optimizedLocationListDistance.size() - 1; i++) {
-                    int index = i + 1;
-//                    if (isAntAlgo && (i+1) == (optimizedLocationListDistance.size() - 1)) {
-//                        index = 1;
-//                    }
-                    drawRoute( optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1), index);
+                    drawRoute( optimizedLocationListDistance.get(i),optimizedLocationListDistance.get(i+1), i + 1);
                 }
                 break;
 
@@ -96,21 +85,23 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
     }
 
     private void drawRoute(final LocationDetail origin, final LocationDetail dest, final int locationIndex) {
-//        final ProgressDialog mProgressDialog = ProgressDialog.show(mActivity,"Please Wait", "drawing route....");
 
         Call<Example> call = apiService.getDistanceDuration("metric", origin.getLat() + "," + origin.getLng(),dest.getLat() + "," + dest.getLng(), "driving", this.mActivity.getResources().getString(R.string.google_maps_key));
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 try {
-//                    mProgressDialog.hide();
+                    assert response.body() != null;
                     for (int i = 0; i < response.body().getRoutes().size(); i++) {
                         String encodedString = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
                         List<LatLng> list = JsonParserForDirection.decodePoly(encodedString);
                         String marker = String.valueOf(locationIndex);
                         mGoogleMap.addMarker(new MarkerOptions().position(origin.getLatLng())
                                 .title(marker)
-                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(mActivity,marker,origin.getIdentifierColor()))));
+                                .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
+                                        mActivity,
+                                        marker,
+                                        origin.getIdentifierColor()))));
 
                         if (!isAntAlgo || (locationIndex + 1) != optimizedLocationListDistance.size()) {
                             marker = String.valueOf(locationIndex+1);
@@ -118,7 +109,7 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
                                     .title(marker)
                                     .icon(BitmapDescriptorFactory.fromBitmap(HandyFunctions.getMarkerIcon(
                                             mActivity,
-                                            String.valueOf(marker),
+                                            marker,
                                             dest.getIdentifierColor())) ));
                         }
 
@@ -131,14 +122,12 @@ public class RpaOnResultMapReadyCallBack implements OnMapReadyCallback {
                     }
                     mActivity.mNextButton.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
-//                    mProgressDialog.hide();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-//                mProgressDialog.hide();
             }
         });
     }

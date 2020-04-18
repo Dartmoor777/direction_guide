@@ -26,7 +26,6 @@ import com.thyme.yaslan99.routeplannerapplication.ResultLocationList.ResultLocat
 import com.thyme.yaslan99.routeplannerapplication.Utils.DijkstraEngine.DijkstrasV2;
 import com.thyme.yaslan99.routeplannerapplication.Utils.HandyFunctions;
 import com.thyme.yaslan99.routeplannerapplication.Utils.LocationDetailSharedPrefUtils;
-import com.thyme.yaslan99.routeplannerapplication.Utils.TSPEngine.TSPEngine;
 import com.thyme.yaslan99.routeplannerapplication.Utils.TSPEngine.Algorithm;
 
 import java.io.IOException;
@@ -48,7 +47,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     private LocationDetailSharedPrefUtils mLocationDetailSharedPrefUtils;
     private ApiInterface apiService;
     private LocationListAdapter locationListAdapter;
-    private TSPEngine mTspEng;
 
     //lists
     public ArrayList<LocationDetail> mLocationDetails;
@@ -82,7 +80,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 
     private void prepareUtils() {
 //        apiService = RetroFitClient.getClient().create(ApiInterface.class);
-        mTspEng = new TSPEngine();
         mLocationDetailSharedPrefUtils = new LocationDetailSharedPrefUtils(getApplicationContext());
     }
 
@@ -285,6 +282,7 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
         DijkstrasV2 dijkstras = new DijkstrasV2(mInputMatrixForTspDistance.length);
         StringBuilder logBuilder = new StringBuilder();
 
+        // build graph from distance matrix
         for (int y = 0; y < mInputMatrixForTspDistance.length; y++) {
             for (int x = 0; x < mInputMatrixForTspDistance[y].length; x++) {
                 if (y == x) continue; // skip empty cells in the matrix
@@ -302,7 +300,6 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
     }
 
     public void getDijkstraRoute() {
-//        List<Integer> bestPath = Dijkstras.getBestPath(mInputMatrixForTspDistance, 0, 1);
         // start point at 0 and end point at last index in array
         List<Integer> bestPath = getDijkstrasBestPath(0, mInputMatrixForTspDistance.length-1);
 

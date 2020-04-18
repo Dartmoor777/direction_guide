@@ -1,17 +1,12 @@
-package com.thyme.yaslan99.routeplannerapplication;
+package com.thyme.yaslan99.routeplannerapplication.slider;
 
 import android.app.Activity;
-import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.smarteist.autoimageslider.IndicatorAnimations;
-import com.smarteist.autoimageslider.IndicatorView.draw.data.RtlMode;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.thyme.yaslan99.routeplannerapplication.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +21,7 @@ public class image_slider extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature( Window.FEATURE_NO_TITLE );
-//        getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN );
-
         setContentView(R.layout.activity_image_slider);
-
 
         sliderView = findViewById(R.id.imageSlider);
 
@@ -56,23 +46,10 @@ public class image_slider extends Activity {
 
         for (Integer image: images) {
             SliderItem sliderItem = new SliderItem();
-            sliderItem.setDescription("");
             sliderItem.setDrawable(image);
             sliderItemList.add(sliderItem);
         }
         adapter.renewItems(sliderItemList);
     }
-
-//    public void removeLastItem() {
-//        if (adapter.getCount() - 1 >= 0)
-//            adapter.deleteItem(adapter.getCount() - 1);
-//    }
-//
-//    public void addNewItem() {
-//        SliderItem sliderItem = new SliderItem();
-//        sliderItem.setDescription("Slider Item Added Manually");
-//        sliderItem.setImageUrl("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-//        adapter.addItem(sliderItem);
-//    }
 }
 
