@@ -253,7 +253,9 @@ public class LocationListActivity extends AppCompatActivity implements OnAdapter
 
 
         Algorithm.newMatrix(convInt2DobuleMatrix(mInputMatrixForTspDistance));
-        Algorithm.iterate();
+        for (int i = 0; i < 100; i++) {
+            Algorithm.iterate();
+        }
         List<Integer> bestChain = (List<Integer>)(List<?>) Arrays.stream( Algorithm.getBestChain() ).boxed().collect( Collectors.toList() );
         bestChain = reArrangeRoute(bestChain);
         Log.d("best chain", Arrays.toString(bestChain.toArray()));
